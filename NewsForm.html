@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta name="Distribution" content="Global" />
+  <meta name="Author" content="Master Bioinformatique de Bordeaux" />
+  <title>Administration of News</title>
+  <link rel="stylesheet" type="text/css" media="screen" href="css/stylesheet.css">
+  <script type="text/javascript" src="js/msbinobi_tools.js"></script>
+  <script type="text/javascript" src="img/listimg.json"></script>
+  <script type="application/json" src="news.json"></script>
+</head>
+<body onload="initNews()">
+<!-- 	Barre de navigation fixe et prenant toute la largeur de l'écran, tout en haut de la page-->
+    <nav>
+	    <ul>
+	      <li><a class = "button" href="#create">Create</a></li>
+	      <li><a class = "button" href="#modify">Modify</a></li>
+	      <li><a class = "button" href="#delete">Delete</a><li>
+	      <li><a class = "button" href="javascript:void(0)" onclick="pushNews()">Apply Changes to GitHub</a></li>
+	    </ul>
+    </nav>
+
+<br><br>
+    <h1>Administration of news</h1>
+
+<!-- Partie de création des news, reliée par l'ancre #create dans le bouton -->
+	<div id="create" name="create">
+		<h2>Creation of a news</h2><br>
+		<h3>Author<h3>     <input type="text" name="author" id="author" required/><br><br>
+	    <h3>Title</h3>     <input type="text" name="title" id="title" required/><br><br>
+	    <h3>Introduction</h3>     <input type="text" name="intro" id="intro" required/><br><br>
+	    <h3>Content</h3><textarea name="content" id="content" rows="10" cols="50" required></textarea>
+
+	    <div id="iconimg"><h3>Choice of the icon</h3><br>
+	     Biology<br>
+	     <p id="biology"></p>
+	     Teaching<br>
+	     <p id="teaching"></p>
+	     Misc<br>
+	     <p id="misc"></p></div>
+
+	    <h3>Publication date (YYYY/MM/DD)</h3><br>
+	    <p id="pubdate"></p>
+
+	     <input type="submit" onclick="createNews()" value="Publish" /></div>
+	     <div id="result"></div>
+
+<!-- Partie d'édition des news, reliée par l'ancre #modify dans le bouton -->
+	<div id="modify" name="modify">
+		<h2>Modification of a news</h2><br>
+		Select a news to modify 	
+	    <div id="listForModify"></div>
+	    <div id="NewsforModify">
+	    <input type="submit" onclick="modifyNews()" value="Modify" /></div>
+        <div id="formModify">
+               
+        </div>
+    </div>
+
+<!-- Partie de suppression des news, reliée par l'ancre #delete dans le bouton -->
+	<div id="delete" name="delete">
+		<h2>Deletion of news</h2><br>
+		Select a news to delete 	
+	    <div id="listForDeletion"></div>
+        <div id="formDelete">
+               <input type="submit"  onclick="deleteNews()" value="Delete" />
+        </div>
+    </div>
+</body>
+</html>

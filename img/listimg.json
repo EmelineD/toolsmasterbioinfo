@@ -1,0 +1,26 @@
+var img = [
+    {
+    	"type":"biology",
+    	"name":"bio_flask"
+    },
+        {
+    	"type":"biology",
+    	"name":"bio_rack"
+    },
+        {
+    	"type":"teaching",
+    	"name":"teach_keyboard"
+    },
+        {
+    	"type":"teaching",
+    	"name":"teach_conf"
+    },
+        {
+    	"type":"misc",
+    	"name":"misc_calendar"
+    },
+        {
+    	"type":"misc",
+    	"name":"misc_archive"
+    }
+]
