@@ -55,7 +55,7 @@ var locations = {
     'Autre-Aucun' : {
         'name': "Autre-Aucun",
         'loc' : "Autre",
-        'type' : "amphi"
+        'type': "amphi"
     }
 }
 

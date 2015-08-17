@@ -1119,8 +1119,9 @@ var listUE10 = [];
 var listidUE10= [];
 var locTalence = [];
 var locCarreire = [];
+var listlect = [];
 var listbat = [];
-
+var listbatmodify = [];
 var myCalendar;
 
 function initCalendar() {
@@ -1161,14 +1162,10 @@ function initCalendar() {
 	}
 	//création de la liste des professeurs
 	var lectselect='';
-	var listlect=[];
 	for (var lec in lecturers){
-		for (var na=0;na<lecturers[lec].length;na++){
-			var namelec= lecturers[lec][na].name;
+			var namelec= lecturers[lec].name;
 			listlect.push(namelec)
-		}
 	}
-
 	listlect.sort();
 	for (var llec in listlect){
 		lectselect +='<option value="'+listlect[llec]+'">'+listlect[llec]+'</option>';
@@ -1296,7 +1293,6 @@ function updateCalendarDisplay() {
   		// document.getElementById("listForDeletion").innerHTML+='<input type="radio" name="titlenewsdel" id="'+myNews[n]["title"]+'" class="titlenewsdel"/> <label for="'+myNews[n]["title"]+'">'+myNews[n]["title"]+'</label><br />'; 
 	}
 	document.getElementById("listForModifycal").innerHTML+=listmodify;
-	console.log(listForModifycal);
 }
 
 function selectUE(){
@@ -1553,48 +1549,61 @@ function modifyCalendar(){
    		if (nbtitles[i].checked)
    		{
    			var yearstart=myCalendar[i].date_start.substring(0,4);
-   			console.log(yearstart);
    			var monthstart=myCalendar[i].date_start.substring(4,6);
-   			var daystart=myCalendar[i].date_start.substring(6);
+   			var daystart=myCalendar[i].date_start.substring(6,8);
    			var hourstart="00";
    			var minstart="00";
-   			if (daystart.length>3){
+   			if (myCalendar[i].date_start.charAt(8)==="T"){
    				daystart=myCalendar[i].date_start.substring(6,8);
-   				hourstart=myCalendar[i].date_start.substring(8,10);	
-   				minstart=myCalendar[i].date_start.substring(10)
+   				hourstart=myCalendar[i].date_start.substring(9,11);	
+   				minstart=myCalendar[i].date_start.substring(11);
    			}
    			var yearend=myCalendar[i].date_end.substring(0,4);
    			var monthend=myCalendar[i].date_end.substring(4,6);
-   			var dayend=myCalendar[i].date_end.substring(6);
+   			var dayend=myCalendar[i].date_end.substring(6,8);
    			var hourend="00";
    			var minend="00";
-   			if (dayend.length>3){
+   			if (myCalendar[i].date_end.charAt(8)==="T"){
    				dayend=myCalendar[i].date_end.substring(6,8);
-   				hourend=myCalendar[i].date_end.substring(8,10);	
-   				minend=myCalendar[i].date_end.substring(10)
+   				hourend=myCalendar[i].date_end.substring(9,11);	
+   				minend=myCalendar[i].date_end.substring(11)
    			}
-
    			var loc=myCalendar[i].location.split('@');
-   			
+   			var lect=myCalendar[i]["lecturer"];
 
    			var titleparse=myCalendar[i].ID.split('');
    			if(titleparse[0]==="C"){
    				var optionsmodify='';
 		    	optionsmodify='<h3>Summary</h3>     <input type="text" name="title" id="title" value="'+myCalendar[i]["summary"]+'"/><br><br>';
-		    	optionsmodify+='<h3>Lecturer</h3>     <input type="text" name="lecturer" id="lecturer" value="'+myCalendar[i]["lecturer"]+'"/><br><br>';
-		    	optionsmodify+='<h3>Start</h3><select name="start" id="startYearModify" value="'+yearstart+'"></select><select name="start" id="startMonthModify" value="'+monthstart+'"></select><select name="start" id="startDayModify" value="'+daystart+'"></select>-<select name="start" id="startHourModify" value="'+hourstart+'"></select>h<select name="start" id="startMinModify" value="'+minstart+'"></select><input type="radio" name="allday" value="allday" id="allday" />All day<br>'
-		    	optionsmodify+='<h3>End</h3><select name="end" id="endYearModify" value="'+yearend+'"></select><select name="end" id="endMonthModify" value="'+monthend+'"></select><select name="end" id="endDayModify" value="'+dayend+'"></select>-<select name="end" id="endHourModify" value="'+hourend+'"></select>h<select name="end" id="endMinModify" value="'+minend+'"></select><br>'
+		    	optionsmodify+='<h3>Lecturer</h3>     <select name="lecturermodify" id="lecturermodify"></select><br><br>';
+		    	optionsmodify+='<h3>Start</h3><select name="start" id="startYearModify"></select><select name="start" id="startMonthModify"></select><select name="start" id="startDayModify"></select>-<select name="start" id="startHourModify"></select>h<select name="start" id="startMinModify"></select><br>'
+		    	optionsmodify+='<h3>End</h3><select name="end" id="endYearModify"></select><select name="end" id="endMonthModify"></select><select name="end" id="endDayModify"></select>-<select name="end" id="endHourModify"></select>h<select name="end" id="endMinModify"></select><br>'
+		    	optionsmodify+='<div id="locations"><h3>Location</h3><select name="locationmodify" id="locationmodify" onChange="selectRoomModify()"></select><span id="roomsmodify"></span></div>';
 		    	optionsmodify+='<input type="submit" onclick="modifyNewsfromJSON()" value="Modify" />';
-		    	optionsmodify+='<div id="locations"><h3>Location</h3><select name="location" id="location" onChange="selectRoom()" value="'+loc[0]+'"></select><span id="rooms" value=></span></div>';
 		    }
 		    document.getElementById("CalendarforModify").innerHTML=optionsmodify
-		    updateDateModify(yearstart,monthstart,daystart,hourstart,minstart,yearend,monthend,dayend,hourend,minend);
+		    // updateDateModify(yearstart,monthstart,daystart,hourstart,minstart,yearend,monthend,dayend,hourend,minend);
+		    // updateLocationModify(loc);
+		    initmodifyCalendar(lect,yearstart,monthstart,daystart,hourstart,minstart,yearend,monthend,dayend,hourend,minend,loc);
 		}
 	}
-	updateNewsDisplay();
+	// updateNewsDisplay();
 }
 
-function updateDateModify(yearstart,monthstart,daystart,hourstart,minstart,yearend,monthend,dayend,hourend,minend){
+function initmodifyCalendar(lect,yearstart,monthstart,daystart,hourstart,minstart,yearend,monthend,dayend,hourend,minend,loc) {
+	//remplissage des lecturers
+	var lectselect='';
+	for (var llec in listlect){
+		if (listlect[llec]===lect){
+			lectselect +='<option value="'+listlect[llec]+'" selected>'+listlect[llec]+'</option>';
+		}
+		else{
+		lectselect +='<option value="'+listlect[llec]+'">'+listlect[llec]+'</option>';
+		}
+	}
+	document.getElementById("lecturermodify").innerHTML+=lectselect;
+
+	//remplissage des listes de dates
 	var yearselectstart;
 	var monthselectstart;
 	var dayselectstart;
@@ -1606,18 +1615,19 @@ function updateDateModify(yearstart,monthstart,daystart,hourstart,minstart,yeare
 	var hourselectend;
 	var minselectend;
 
-	var year=[2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025,2026,2027,2028,2029,2030]
+	var year=["2015","2016","2017","2018","2019","2020","2021","2022","2023","2024","2025","2026","2027","2028","2029","2030"]
 	for (var y=0;y<year.length;y++){
 		if (year[y]===yearstart){
 			yearselectstart+='<option value="'+year[y]+'" selected>'+year[y]+'</option>';
 		}
-		else if (year[y]===yearend){
+		else {
+			yearselectstart+='<option value="'+year[y]+'">'+year[y]+'</option>';
+		}
+		if (year[y]===yearend){
 			yearselectend+='<option value="'+year[y]+'" selected>'+year[y]+'</option>';
-	
 		}
 		else{
-		yearselectstart+='<option value="'+year[y]+'">'+year[y]+'</option>';
-		yearselectend+='<option value="'+year[y]+'">'+year[y]+'</option>';
+			yearselectend+='<option value="'+year[y]+'">'+year[y]+'</option>';
 		}
 	}
 
@@ -1626,26 +1636,30 @@ function updateDateModify(yearstart,monthstart,daystart,hourstart,minstart,yeare
 		if (month[mo]===monthstart){
 			monthselectstart+='<option value="'+month[mo]+'" selected>'+month[mo]+'</option>';
 		}
-		else if (month[mo]===monthend){
+		else{
+			monthselectstart+='<option value="'+month[mo]+'">'+month[mo]+'</option>';
+		}
+		if (month[mo]===monthend){
 			monthselectend+='<option value="'+month[mo]+'" selected>'+month[mo]+'</option>';
 		}
 		else{
-		monthselectstart+='<option value="'+month[mo]+'">'+month[mo]+'</option>';
-		monthselectend+='<option value="'+month[mo]+'">'+month[mo]+'</option>';
+			monthselectend+='<option value="'+month[mo]+'">'+month[mo]+'</option>';
 		}
 	}
 
 	var day=["01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31"]
 	for (var d=0;d<day.length;d++){
 		if (day[d]===daystart){
-		dayselectstart+='<option value="'+day[d]+'" selected>'+day[d]+'</option>';
-		}
-		if (day[d]===dayend){
-		dayselectend+='<option value="'+day[d]+'" selected>'+day[d]+'</option>';
+			dayselectstart+='<option value="'+day[d]+'" selected>'+day[d]+'</option>';
 		}
 		else {
-		dayselectstart+='<option value="'+day[d]+'">'+day[d]+'</option>';
-		dayselectend+='<option value="'+day[d]+'">'+day[d]+'</option>';
+			dayselectstart+='<option value="'+day[d]+'">'+day[d]+'</option>';
+		}
+		if (day[d]===dayend){
+			dayselectend+='<option value="'+day[d]+'" selected>'+day[d]+'</option>';
+			}
+		else {
+			dayselectend+='<option value="'+day[d]+'">'+day[d]+'</option>';
 		}
 	}
 
@@ -1654,25 +1668,29 @@ function updateDateModify(yearstart,monthstart,daystart,hourstart,minstart,yeare
 		if (hour[h]===hourstart){
 			hourselectstart+='<option value="'+hour[h]+'" selected>'+hour[h]+'</option>';
 		}
-		else if (hour[h]===hourend){
+		else{
+			hourselectstart+='<option value="'+hour[h]+'">'+hour[h]+'</option>'
+		}
+		if (hour[h]===hourend){
 			hourselectend+='<option value="'+hour[h]+'" selected>'+hour[h]+'</option>';
 		}
 		else{
-			hourselectstart+='<option value="'+hour[h]+'">'+hour[h]+'</option>';
 			hourselectend+='<option value="'+hour[h]+'">'+hour[h]+'</option>';
 		}
-
+	}
 	var minute=["00","15","30","45"]
 	for (var min=0;min<minute.length;min++){
 		if (minute[min]===minstart){
 			minselectstart+='<option value="'+minute[min]+'" selected>'+minute[min]+'</option>';
 		}
-		else if (minute[min]===minend){
+		else{
+			minselectstart+='<option value="'+minute[min]+'">'+minute[min]+'</option>';
+		}
+		if (minute[min]===minend){
 			minselectend+='<option value="'+minute[min]+'" selected>'+minute[min]+'</option>';
 		}
 		else{
-			minselectstart+='<option value="'+minute[min]+'" selected>'+minute[min]+'</option>';
-			minselectend+='<option value="'+minute[min]+'" selected>'+minute[min]+'</option>';
+			minselectend+='<option value="'+minute[min]+'">'+minute[min]+'</option>';
 		}
 	}
 	document.getElementById("startYearModify").innerHTML+=yearselectstart;
@@ -1685,6 +1703,70 @@ function updateDateModify(yearstart,monthstart,daystart,hourstart,minstart,yeare
 	document.getElementById("endDayModify").innerHTML+=dayselectend;
 	document.getElementById("endHourModify").innerHTML+=hourselectend;
 	document.getElementById("endMinModify").innerHTML+=minselectend;
+
+	//création de la liste des lieux
+	var locselectmodify='';
+	for (var l in locations){
+		var nameloc= locations[l].name;
+		if (nameloc===loc[1]){
+			locselectmodify +='<option value="'+nameloc+'" selected>'+nameloc+'</option>';
+		}
+		else{
+		locselectmodify +='<option value="'+nameloc+'">'+nameloc+'</option>';
+		}
+		if(locations[l].type !=="bat"){
+			listbatmodify.push(nameloc);
+		}
+	}
+	document.getElementById("locationmodify").innerHTML+=locselectmodify;
+	for (var l=0;l<listbatmodify.length;l++){
+		if (loc[1]===listbatmodify[l]){
+			var html=' ';
+		}
+		else{
+			var html='<h3>Room</h3>     <input type="text" name="room" id="room" value="'+loc[0].substring(4)+'" required/>';
+		}
+	}
+	document.getElementById("roomsmodify").innerHTML=html;
+
+
+	// //création de la liste des groupes
+	// var groupselect='';
+	// for (var g in groups){
+	// 	for (var n=0;n<groups[g].length;n++){
+	// 		var namegroup= groups[g][n].name;
+	// 		groupselect +='<option value="'+namegroup+'">'+namegroup+'</option>';
+	// 	}
+	// }
+	// document.getElementById("groups").innerHTML+=groupselect;
+
+	// //création de la liste des parcours
+	// var parselect='';
+	// for (var g in parcours){
+	// 	for (var n=0;n<parcours[g].length;n++){
+	// 		var namepar= parcours[g][n].name;
+	// 		var typepar= parcours[g][n].value;
+	// 		parselect +=' <input type="checkbox" name="'+namepar+'" id="'+namepar+'" value="'+typepar+'" /> <label for="'+namepar+'">'+namepar+'</label>';
+	// 	}
+	// }	
+	// document.getElementById("parcours").innerHTML+=parselect;
+	// getCalendarJSON();
+}
+
+
+
+function selectRoomModify(){
+	var locmodify=document.getElementById('locationmodify').value;
+	for (var l=0;l<listbatmodify.length;l++){
+		if (locmodify!==listbatmodify[l]){
+			var html='<h3>Room</h3>     <input type="text" name="room" id="room" required/>';
+		}
+		else{
+			var html=' ';
+		}
+		console.log(html);
+	}
+	document.getElementById("roomsmodify").innerHTML=html;
 }
 
 function deleteNews(){
@@ -1755,7 +1837,7 @@ function deleteNews(){
     'Autre-Aucun' : {
         'name': "Autre-Aucun",
         'loc' : "Autre",
-        'type' : "amphi"
+        'type': "amphi"
     }
 }
 
@@ -1820,42 +1902,42 @@ var parcours = {
         'value':8
     }
 }
-;var calendar_elements = {
-    'C1F20150731T145900@userGithub' : {
+;[
+    {
         "ID"        : "C1F20150731T145900@userGithub", 
         "summary"   : "KM1BS10U-Stats", 
-        "date_start": "20150831T1400", 
-        "date_end"  : "20150831T1700", 
+        "date_start": "20160831T1400", 
+        "date_end"  : "20160831T1700", 
         "group"     : "All",
-        "lecturer"  : "M Beurton-Aimar",
+        "lecturer"  : "Beurton-Aimar M",
         "location"  : "room24@ED::Carreire",
         "description" : "Read the article \"Beetroot Plantations in Himalaya\" before coming.",
         "image"     : "biology",
         "comment"   : "AEB-Stats"
     },
-    'C1F20150731T145915@username' : {
+    {
         "ID"        : "C1F20150731T145915@username",
         "summary"   : "J1BS7M01-Imag",
         "date_start": "20150804T0800", 
         "date_end"  : "20150804T1200", 
         "group"     : "A",
-        "lecturer"  : "JC Taveau",
+        "lecturer"  : "Taveau JC",
         "location"  : "room24@CREMI::Talence",
         "description"   : "",
         "image"     : "hybrid",
         "comment"   : "BioMod-Imag"
     },
-    'C1F20150731T145940@username' : {
+    {
         "ID"        : "C1F20150731T145940@username",
         "summary"   : "J1BS7M01-Imag",
         "date_start": "20150804T0800", 
         "date_end"  : "20150804T1200", 
         "group"     : "B",
-        "lecturer"  : "P Thébault",
+        "lecturer"  : "Thébault P",
         "location"  : "room41@ED::Carreire",
         "description"   : ""
     },
-    'C2F20150801T1459@jeesay' : {
+    {
         "ID"            : "C2F20150801T1459@jeesay",
         "summary"       : "F1BS0201",
         "comment"       : "StageM2",
@@ -1866,7 +1948,7 @@ var parcours = {
         "location"      : "",
         "description"   : ""
     },
-    'E1F20150801T1459@jeesay' : {
+    {
         "ID"            : "E1F20150801T1459@jeesay",
         "summary"       : "Summer holidays",
         "date_start"    : "20150701", 
@@ -1878,7 +1960,7 @@ var parcours = {
         "students"      : "C++BIO[required],GENORG[required],ORGECO[required],BSC[required]",
         "image"         : "summer"
     },
-    'E0F20150731T145923@jeesay' : {
+    {
         "ID"            : "E0F20150731T145923@jeesay",
         "summary"       : "Réunion de rentrée M1 et M2",
         "lecturer"      : "",
@@ -1890,68 +1972,68 @@ var parcours = {
         "image"         : "calendar",
         "comment"       : ""
     }
-};var news_elements={
-    '20150901T140039@userGithub' : {
+];[
+    {
         "ID": "20150901T140039@userGithub",
         "date": "20150901",
         "title": "NEWS #1: RENTREE 2015 M1 M2",
         "contents": "Curabitur feugiat urna a eros viverra, quis vulputate ipsum sollicitudin. Vestibulum efficitur magna nulla, porta tincidunt nunc lobortis vitae.<!--more-->Here is the remaining text only available if you click on the 'More...' button ... Vivamus a leo ipsum. Curabitur rutrum dictum mauris quis suscipit. Aliquam auctor metus non dolor rhoncus scelerisque.",
         "image": "misc_calendar" 
     },
-    '20150901T140039@userGithub' : {
+    {
         "ID": "20150901T140039@userGithub",
         "date" : "20150829", 
         "title": "NEWS #2: Etiam a metus sit",
         "contents": "Etiam a metus sit amet lectus facilisis accumsan vitae sit amet mauris. Nulla facilisi. Praesent turpis magna",        
         "image": "bio_flask" 
     },
-    '20150901T140039@userGithub' : {
+    {
         "ID": "20150901T140039@userGithub",
         "date" : "20150819", 
         "title": "NEWS #3: Lorem ipsum dolor sit amet",
         "contents": "Curabitur feugiat urna a eros viverra, quis vulputate ipsum sollicitudin. Vestibulum efficitur magna nulla, porta tincidunt nunc lobortis vitae.<!--more-->Here is the remaining text only available if you click on the 'More...' button ... Vivamus a leo ipsum. Curabitur rutrum dictum mauris quis suscipit. Aliquam auctor metus non dolor rhoncus scelerisque.",
         "image": "teach_keyboard" 
     },
-    '20150901T140039@userGithub' : {
+    {
         "ID": "20150901T140039@userGithub",
         "date" : "2015-07-23",
         "title": "NEWS #4: Nulla facilisi. Praesent turpis magna.",
         "contents": "Curabitur feugiat urna a eros viverra, quis vulputate ipsum sollicitudin. Vestibulum efficitur magna nulla, porta tincidunt nunc lobortis vitae.<!--more-->Here is the remaining text only available if you click on the 'More...' button ... Vivamus a leo ipsum. Curabitur rutrum dictum mauris quis suscipit. Aliquam auctor metus non dolor rhoncus scelerisque.",
         "image": "teach_conf" 
     },
-    '20150901T140039@userGithub' : {
+    {
         "ID": "20150901T140039@userGithub",
         "date" : "2015-07-11", 
         "title": "NEWS #5: Lectus facilisis accumsan",
         "contents": "Curabitur feugiat urna a eros viverra, quis vulputate ipsum sollicitudin. Vestibulum efficitur magna nulla, porta tincidunt nunc lobortis vitae.<!--more-->Here is the remaining text only available if you click on the 'More...' button ... Vivamus a leo ipsum. Curabitur rutrum dictum mauris quis suscipit. Aliquam auctor metus non dolor rhoncus scelerisque.",
         "image": "bio_rack" 
     },
-    '20150901T140039@userGithub' : {
+    {
         "ID": "20150901T140039@userGithub",
         "date" : "2015-06-21", 
         "title": "NEWS #6: At last but not least",
         "contents": "Curabitur feugiat urna a eros viverra, quis vulputate ipsum sollicitudin. Vestibulum efficitur magna nulla, porta tincidunt nunc lobortis vitae.<!--more-->Here is the remaining text only available if you click on the 'More...' button ... Vivamus a leo ipsum. Curabitur rutrum dictum mauris quis suscipit. Aliquam auctor metus non dolor rhoncus scelerisque.",
         "image": "misc_calendar" 
     },
-    '20150901T140039@userGithub' : {
+    {
         "ID": "20150901T140039@userGithub",
         "date" : "2015-06-19",
         "title": "NEWS #7: At last but not least",
         "contents": "Curabitur feugiat urna a eros viverra, quis vulputate ipsum sollicitudin. Vestibulum efficitur magna nulla, porta tincidunt nunc lobortis vitae.<!--more-->Here is the remaining text only available if you click on the 'More...' button ... Vivamus a leo ipsum. Curabitur rutrum dictum mauris quis suscipit. Aliquam auctor metus non dolor rhoncus scelerisque.",
         "image": "misc_calendar" 
     },
-    '20150901T140039@userGithub' : {
+    {
         "ID": "20150901T140039@userGithub",
         "date" : "2015-05-30", 
         "title": "NEWS #8: At last but not least",
         "contents": "Curabitur feugiat urna a eros viverra, quis vulputate ipsum sollicitudin. Vestibulum efficitur magna nulla, porta tincidunt nunc lobortis vitae.<!--more-->Here is the remaining text only available if you click on the 'More...' button ... Vivamus a leo ipsum. Curabitur rutrum dictum mauris quis suscipit. Aliquam auctor metus non dolor rhoncus scelerisque.",
         "image": "misc_calendar" 
     },
-    '20150901T140039@userGithub' : {
+    {
         "ID": "20150901T140039@userGithub",
         "date" : "2015-05-07",
         "title": "NEWS #9: At last but not least",
         "contents": "Curabitur feugiat urna a eros viverra, quis vulputate ipsum sollicitudin. Vestibulum efficitur magna nulla, porta tincidunt nunc lobortis vitae.<!--more-->Here is the remaining text only available if you click on the 'More...' button ... Vivamus a leo ipsum. Curabitur rutrum dictum mauris quis suscipit. Aliquam auctor metus non dolor rhoncus scelerisque.",
         "image": "misc_calendar" 
     }
-}
+]
