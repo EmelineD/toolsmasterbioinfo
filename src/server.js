@@ -1,10 +1,12 @@
 var http = require('http');
 var fs = require('fs');
-var github = new Github({
-	  username: "YOU_USER",
-	  password: "YOUR_PASSWORD",
-	  auth: "basic"
-	});
+var GitHubApi = require("github");
+
+var github = github.authenticate({
+    type: "basic",
+    username: "mikedeboertest",
+    password: "test1324"
+});
 
 // Chargement du fichier index.html affiché au client
 

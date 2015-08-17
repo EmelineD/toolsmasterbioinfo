@@ -46,7 +46,7 @@ function getNewsJSON(){
 		
 	};
 	// xhr.open("GET", "http://master-bioinfo-bordeaux.github.io/data/news.json", true);
-	xhr.open("GET", "news_json.js", true);
+	xhr.open("GET", "src/news_json.js", true);
 	xhr.send(null);
 }
 

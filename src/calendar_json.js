@@ -1,5 +1,5 @@
-[
-    {
+var calendar_elements = {
+    'C1F20150731T145900@userGithub' : {
         "ID"        : "C1F20150731T145900@userGithub", 
         "summary"   : "KM1BS10U-Stats", 
         "date_start": "20150831T1400", 
@@ -11,7 +11,7 @@
         "image"     : "biology",
         "comment"   : "AEB-Stats"
     },
-    {
+    'C1F20150731T145915@username' : {
         "ID"        : "C1F20150731T145915@username",
         "summary"   : "J1BS7M01-Imag",
         "date_start": "20150804T0800", 
@@ -23,7 +23,7 @@
         "image"     : "hybrid",
         "comment"   : "BioMod-Imag"
     },
-    {
+    'C1F20150731T145940@username' : {
         "ID"        : "C1F20150731T145940@username",
         "summary"   : "J1BS7M01-Imag",
         "date_start": "20150804T0800", 
@@ -33,7 +33,7 @@
         "location"  : "room41@ED::Carreire",
         "description"   : ""
     },
-    {
+    'C2F20150801T1459@jeesay' : {
         "ID"            : "C2F20150801T1459@jeesay",
         "summary"       : "F1BS0201",
         "comment"       : "StageM2",
@@ -44,7 +44,7 @@
         "location"      : "",
         "description"   : ""
     },
-    {
+    'E1F20150801T1459@jeesay' : {
         "ID"            : "E1F20150801T1459@jeesay",
         "summary"       : "Summer holidays",
         "date_start"    : "20150701", 
@@ -56,7 +56,7 @@
         "students"      : "C++BIO[required],GENORG[required],ORGECO[required],BSC[required]",
         "image"         : "summer"
     },
-    {
+    'E0F20150731T145923@jeesay' : {
         "ID"            : "E0F20150731T145923@jeesay",
         "summary"       : "Réunion de rentrée M1 et M2",
         "lecturer"      : "",
@@ -68,4 +68,4 @@
         "image"         : "calendar",
         "comment"       : ""
     }
-]
+}

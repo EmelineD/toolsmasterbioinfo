@@ -172,19 +172,20 @@ function getCalendarJSON(){
     	}
 		
 	};
-	xhr.open("GET", "calendar_json.js", true);
+	xhr.open("GET", "src/calendar_json.js", true);
 	xhr.send(null);
 }
 
 function updateCalendarDisplay() {
-	console.log(myCalendar)
 	document.getElementById("listForModifycal").innerHTML='';
-	// document.getElementById("listForDeletioncal").innerHTML='';
+	document.getElementById("listForDeletioncal").innerHTML='';
+	var listmodify='';
 	  for(var n in myCalendar){
-  		document.getElementById("listForModifycal").innerHTML+='<input type="radio" name="titlecalmod" id="'+myCalendar[n]["summary"]+'" class="titlecalmod"/> <label for="'+myCalendar[n]["summary"]+'">'+myCalendar[n]["summary"]+'</label><br />'; 
+  		listmodify+='<input type="radio" name="titlecalmod" id="'+myCalendar[n]["summary"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'" class="titlecalmod"/> <label for="'+myCalendar[n]["summary"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'">'+myCalendar[n]["summary"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'</label><br />'; 
   		// document.getElementById("listForDeletion").innerHTML+='<input type="radio" name="titlenewsdel" id="'+myNews[n]["title"]+'" class="titlenewsdel"/> <label for="'+myNews[n]["title"]+'">'+myNews[n]["title"]+'</label><br />'; 
 	}
-
+	document.getElementById("listForModifycal").innerHTML+=listmodify;
+	console.log(listForModifycal);
 }
 
 function selectUE(){
@@ -436,21 +437,144 @@ function createCalendarEvent(){
 
 function modifyCalendar(){
    	var nbtitles = document.getElementsByClassName("titlecalmod");
-
-   	for (var i = 0; i< nbtitles.length; i++)
+   	for (var i = 0; i<= nbtitles.length; i++)
    	{
    		if (nbtitles[i].checked)
    		{
-		    	var content = myCalendar[i]["contents"].split('<!--more-->'); //à changer sur le json définitif
-		    	console.log(content)
-		    	document.getElementById("CalendarforModify").innerHTML='<h3>Title</h3>     <input type="text" name="title" id="title" value="'+nbtitles[i].id+'"/><br><br>';
-		    	document.getElementById("CalendarforModify").innerHTML+='<h3>Introduction</h3>     <input type="text" name="intro" id="intro" value="'+content[0]+'"/><br><br>';
-		    	document.getElementById("CalendarforModify").innerHTML+='<h3>Content</h3><textarea name="content" id="content" rows="10" cols="50" >'+content[1]+'</textarea>';
-		    	document.getElementById("CalendarforModify").innerHTML+='<input type="submit" onclick="modifyNewsfromJSON()" value="Modify" />';
+   			var yearstart=myCalendar[i].date_start.substring(0,4);
+   			console.log(yearstart);
+   			var monthstart=myCalendar[i].date_start.substring(4,6);
+   			var daystart=myCalendar[i].date_start.substring(6);
+   			var hourstart="00";
+   			var minstart="00";
+   			if (daystart.length>3){
+   				daystart=myCalendar[i].date_start.substring(6,8);
+   				hourstart=myCalendar[i].date_start.substring(8,10);	
+   				minstart=myCalendar[i].date_start.substring(10)
+   			}
+   			var yearend=myCalendar[i].date_end.substring(0,4);
+   			var monthend=myCalendar[i].date_end.substring(4,6);
+   			var dayend=myCalendar[i].date_end.substring(6);
+   			var hourend="00";
+   			var minend="00";
+   			if (dayend.length>3){
+   				dayend=myCalendar[i].date_end.substring(6,8);
+   				hourend=myCalendar[i].date_end.substring(8,10);	
+   				minend=myCalendar[i].date_end.substring(10)
+   			}
+
+   			var loc=myCalendar[i].location.split('@');
+   			
+
+   			var titleparse=myCalendar[i].ID.split('');
+   			if(titleparse[0]==="C"){
+   				var optionsmodify='';
+		    	optionsmodify='<h3>Summary</h3>     <input type="text" name="title" id="title" value="'+myCalendar[i]["summary"]+'"/><br><br>';
+		    	optionsmodify+='<h3>Lecturer</h3>     <input type="text" name="lecturer" id="lecturer" value="'+myCalendar[i]["lecturer"]+'"/><br><br>';
+		    	optionsmodify+='<h3>Start</h3><select name="start" id="startYearModify" value="'+yearstart+'"></select><select name="start" id="startMonthModify" value="'+monthstart+'"></select><select name="start" id="startDayModify" value="'+daystart+'"></select>-<select name="start" id="startHourModify" value="'+hourstart+'"></select>h<select name="start" id="startMinModify" value="'+minstart+'"></select><input type="radio" name="allday" value="allday" id="allday" />All day<br>'
+		    	optionsmodify+='<h3>End</h3><select name="end" id="endYearModify" value="'+yearend+'"></select><select name="end" id="endMonthModify" value="'+monthend+'"></select><select name="end" id="endDayModify" value="'+dayend+'"></select>-<select name="end" id="endHourModify" value="'+hourend+'"></select>h<select name="end" id="endMinModify" value="'+minend+'"></select><br>'
+		    	optionsmodify+='<input type="submit" onclick="modifyNewsfromJSON()" value="Modify" />';
+		    	optionsmodify+='<div id="locations"><h3>Location</h3><select name="location" id="location" onChange="selectRoom()" value="'+loc[0]+'"></select><span id="rooms" value=></span></div>';
 		    }
+		    document.getElementById("CalendarforModify").innerHTML=optionsmodify
+		    updateDateModify(yearstart,monthstart,daystart,hourstart,minstart,yearend,monthend,dayend,hourend,minend);
 		}
-		updateNewsDisplay();
 	}
+	updateNewsDisplay();
+}
+
+function updateDateModify(yearstart,monthstart,daystart,hourstart,minstart,yearend,monthend,dayend,hourend,minend){
+	var yearselectstart;
+	var monthselectstart;
+	var dayselectstart;
+	var hourselectstart;
+	var minselectstart;
+	var yearselectend;
+	var monthselectend;
+	var dayselectend;
+	var hourselectend;
+	var minselectend;
+
+	var year=[2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025,2026,2027,2028,2029,2030]
+	for (var y=0;y<year.length;y++){
+		if (year[y]===yearstart){
+			yearselectstart+='<option value="'+year[y]+'" selected>'+year[y]+'</option>';
+		}
+		else if (year[y]===yearend){
+			yearselectend+='<option value="'+year[y]+'" selected>'+year[y]+'</option>';
+	
+		}
+		else{
+		yearselectstart+='<option value="'+year[y]+'">'+year[y]+'</option>';
+		yearselectend+='<option value="'+year[y]+'">'+year[y]+'</option>';
+		}
+	}
+
+	var month=["01","02","03","04","05","06","07","08","09","10","11","12"];
+	for (var mo=0;mo<month.length;mo++){
+		if (month[mo]===monthstart){
+			monthselectstart+='<option value="'+month[mo]+'" selected>'+month[mo]+'</option>';
+		}
+		else if (month[mo]===monthend){
+			monthselectend+='<option value="'+month[mo]+'" selected>'+month[mo]+'</option>';
+		}
+		else{
+		monthselectstart+='<option value="'+month[mo]+'">'+month[mo]+'</option>';
+		monthselectend+='<option value="'+month[mo]+'">'+month[mo]+'</option>';
+		}
+	}
+
+	var day=["01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31"]
+	for (var d=0;d<day.length;d++){
+		if (day[d]===daystart){
+		dayselectstart+='<option value="'+day[d]+'" selected>'+day[d]+'</option>';
+		}
+		if (day[d]===dayend){
+		dayselectend+='<option value="'+day[d]+'" selected>'+day[d]+'</option>';
+		}
+		else {
+		dayselectstart+='<option value="'+day[d]+'">'+day[d]+'</option>';
+		dayselectend+='<option value="'+day[d]+'">'+day[d]+'</option>';
+		}
+	}
+
+	var hour=["00","08","09","10","11","12","13","14","15","16","17","18","19"]
+	for (var h=0;h<hour.length;h++){
+		if (hour[h]===hourstart){
+			hourselectstart+='<option value="'+hour[h]+'" selected>'+hour[h]+'</option>';
+		}
+		else if (hour[h]===hourend){
+			hourselectend+='<option value="'+hour[h]+'" selected>'+hour[h]+'</option>';
+		}
+		else{
+			hourselectstart+='<option value="'+hour[h]+'">'+hour[h]+'</option>';
+			hourselectend+='<option value="'+hour[h]+'">'+hour[h]+'</option>';
+		}
+
+	var minute=["00","15","30","45"]
+	for (var min=0;min<minute.length;min++){
+		if (minute[min]===minstart){
+			minselectstart+='<option value="'+minute[min]+'" selected>'+minute[min]+'</option>';
+		}
+		else if (minute[min]===minend){
+			minselectend+='<option value="'+minute[min]+'" selected>'+minute[min]+'</option>';
+		}
+		else{
+			minselectstart+='<option value="'+minute[min]+'" selected>'+minute[min]+'</option>';
+			minselectend+='<option value="'+minute[min]+'" selected>'+minute[min]+'</option>';
+		}
+	}
+	document.getElementById("startYearModify").innerHTML+=yearselectstart;
+	document.getElementById("startMonthModify").innerHTML+=monthselectstart;
+	document.getElementById("startDayModify").innerHTML+=dayselectstart;
+	document.getElementById("startHourModify").innerHTML+=hourselectstart;
+	document.getElementById("startMinModify").innerHTML+=minselectstart;
+	document.getElementById("endYearModify").innerHTML+=yearselectend;
+	document.getElementById("endMonthModify").innerHTML+=monthselectend;
+	document.getElementById("endDayModify").innerHTML+=dayselectend;
+	document.getElementById("endHourModify").innerHTML+=hourselectend;
+	document.getElementById("endMinModify").innerHTML+=minselectend;
+}
 
 function deleteNews(){
   		var nbtitles = document.getElementsByClassName("titlecaldel");
