@@ -139,21 +139,17 @@ function initCalendar() {
 	//création de la liste des groupes
 	var groupselect='';
 	for (var g in groups){
-		for (var n=0;n<groups[g].length;n++){
-			var namegroup= groups[g][n].name;
-			groupselect +='<option value="'+namegroup+'">'+namegroup+'</option>';
-		}
+		var namegroup= groups[g].name;
+		groupselect +='<option value="'+namegroup+'">'+namegroup+'</option>';
 	}
 	document.getElementById("groups").innerHTML+=groupselect;
 
 	//création de la liste des parcours
 	var parselect='';
 	for (var g in parcours){
-		for (var n=0;n<parcours[g].length;n++){
-			var namepar= parcours[g][n].name;
-			var typepar= parcours[g][n].value;
-			parselect +=' <input type="checkbox" name="'+namepar+'" id="'+namepar+'" value="'+typepar+'" /> <label for="'+namepar+'">'+namepar+'</label>';
-		}
+		var namepar= parcours[g].name;
+		var typepar= parcours[g].value;
+		parselect +=' <input type="checkbox" name="'+namepar+'" id="'+namepar+'" value="'+typepar+'" checked /> <label for="'+namepar+'">'+namepar+'</label>';
 	}	
 	document.getElementById("parcours").innerHTML+=parselect;
 	getCalendarJSON();
@@ -459,6 +455,8 @@ function modifyCalendar(){
    			}
    			var loc=myCalendar[i].location.split('@');
    			var lect=myCalendar[i]["lecturer"];
+   			var group=myCalendar[i]["group"];
+   			var contentmodify=myCalendar[i]["description"]
 
    			var titleparse=myCalendar[i].ID.split('');
    			if(titleparse[0]==="C"){
@@ -468,30 +466,31 @@ function modifyCalendar(){
 		    	optionsmodify+='<h3>Start</h3><select name="start" id="startYearModify"></select><select name="start" id="startMonthModify"></select><select name="start" id="startDayModify"></select>-<select name="start" id="startHourModify"></select>h<select name="start" id="startMinModify"></select><br>'
 		    	optionsmodify+='<h3>End</h3><select name="end" id="endYearModify"></select><select name="end" id="endMonthModify"></select><select name="end" id="endDayModify"></select>-<select name="end" id="endHourModify"></select>h<select name="end" id="endMinModify"></select><br>'
 		    	optionsmodify+='<div id="locations"><h3>Location</h3><select name="locationmodify" id="locationmodify" onChange="selectRoomModify()"></select><span id="roomsmodify"></span></div>';
+		    	optionsmodify+='<span id="students"><h3>Students</h3><select name="groupsmodify" id="groupsmodify"></select></span><br><br><br>'
+		    	optionsmodify+='<h3>Notes</h3><textarea name="notes" id="contentmodify" rows="10" cols="50" required>'+contentmodify+'</textarea>'
+		    	optionsmodify+='<input type="submit" onclick="modifyNewsfromJSON()" value="Modify" />';
+		    }
+   			if(titleparse[0]==="E"){
+   				var optionsmodify='';
+		    	optionsmodify='<h3>Summary</h3>     <input type="text" name="title" id="title" value="'+myCalendar[i]["summary"]+'"/><br><br>';
+		    	optionsmodify+='<h3>Lecturer</h3><input type="text" name="lecturer" id="lecturerevent" required/><br><br>';
+		    	optionsmodify+='<h3>Start</h3><select name="start" id="startYearModify"></select><select name="start" id="startMonthModify"></select><select name="start" id="startDayModify"></select>-<select name="start" id="startHourModify"></select>h<select name="start" id="startMinModify"></select><br>'
+		    	optionsmodify+='<h3>End</h3><select name="end" id="endYearModify"></select><select name="end" id="endMonthModify"></select><select name="end" id="endDayModify"></select>-<select name="end" id="endHourModify"></select>h<select name="end" id="endMinModify"></select><br>'
+		    	optionsmodify+='<div id="locations"><h3>Location</h3><select name="locationmodify" id="locationmodify" onChange="selectRoomModify()"></select><span id="roomsmodify"></span></div>';
+		    	optionsmodify+='<span id="students"><h3>Students</h3><select name="yearstudymodify" id="yearstudymodify"></select><span id="parcoursmodify"></span><br><br>'
+		    	optionsmodify+='<h3>Notes</h3><textarea name="notes" id="contentmodify" rows="10" cols="50" required>'+contentmodify+'</textarea>'
 		    	optionsmodify+='<input type="submit" onclick="modifyNewsfromJSON()" value="Modify" />';
 		    }
 		    document.getElementById("CalendarforModify").innerHTML=optionsmodify
 		    // updateDateModify(yearstart,monthstart,daystart,hourstart,minstart,yearend,monthend,dayend,hourend,minend);
 		    // updateLocationModify(loc);
-		    initmodifyCalendar(lect,yearstart,monthstart,daystart,hourstart,minstart,yearend,monthend,dayend,hourend,minend,loc);
+		    initmodifyCalendar(lect,yearstart,monthstart,daystart,hourstart,minstart,yearend,monthend,dayend,hourend,minend,loc,group,titleparse);
 		}
 	}
 	// updateNewsDisplay();
 }
 
-function initmodifyCalendar(lect,yearstart,monthstart,daystart,hourstart,minstart,yearend,monthend,dayend,hourend,minend,loc) {
-	//remplissage des lecturers
-	var lectselect='';
-	for (var llec in listlect){
-		if (listlect[llec]===lect){
-			lectselect +='<option value="'+listlect[llec]+'" selected>'+listlect[llec]+'</option>';
-		}
-		else{
-		lectselect +='<option value="'+listlect[llec]+'">'+listlect[llec]+'</option>';
-		}
-	}
-	document.getElementById("lecturermodify").innerHTML+=lectselect;
-
+function initmodifyCalendar(lect,yearstart,monthstart,daystart,hourstart,minstart,yearend,monthend,dayend,hourend,minend,loc,group,titleparse) {
 	//remplissage des listes de dates
 	var yearselectstart;
 	var monthselectstart;
@@ -595,9 +594,12 @@ function initmodifyCalendar(lect,yearstart,monthstart,daystart,hourstart,minstar
 
 	//création de la liste des lieux
 	var locselectmodify='';
+	if (loc[0]===""){
+		loc.splice(0,1,"Autre-Aucun");
+	}
 	for (var l in locations){
 		var nameloc= locations[l].name;
-		if (nameloc===loc[1]){
+		if (nameloc===loc[1] || nameloc===loc[0]){
 			locselectmodify +='<option value="'+nameloc+'" selected>'+nameloc+'</option>';
 		}
 		else{
@@ -609,37 +611,77 @@ function initmodifyCalendar(lect,yearstart,monthstart,daystart,hourstart,minstar
 	}
 	document.getElementById("locationmodify").innerHTML+=locselectmodify;
 	for (var l=0;l<listbatmodify.length;l++){
-		if (loc[1]===listbatmodify[l]){
+		if (loc[1]===listbatmodify[l] || loc[0]===listbatmodify[l]){
 			var html=' ';
 		}
-		else{
+	}
+	if (html!==' '){
 			var html='<h3>Room</h3>     <input type="text" name="room" id="room" value="'+loc[0].substring(4)+'" required/>';
 		}
-	}
+		
 	document.getElementById("roomsmodify").innerHTML=html;
 
+	if (titleparse[0]==="E"){
 
-	// //création de la liste des groupes
-	// var groupselect='';
-	// for (var g in groups){
-	// 	for (var n=0;n<groups[g].length;n++){
-	// 		var namegroup= groups[g][n].name;
-	// 		groupselect +='<option value="'+namegroup+'">'+namegroup+'</option>';
-	// 	}
-	// }
-	// document.getElementById("groups").innerHTML+=groupselect;
+	//création de la liste des années
+	var yearselectmodify='';
+	if (titleparse[1]==="0"){
+		yearselectmodify+='<option value="All" selected>All</option>'
+	}
+	else{
+		yearselectmodify+='<option value="All">All</option>'
+	}
+	if (titleparse[1]==="1"){
+		yearselectmodify+='<option value="M1" selected>M1</option>'
+	}
+	else{
+		yearselectmodify+='<option value="M1">M1</option>'
+	}
+	if (titleparse[1]==="2"){
+		yearselectmodify+='<option value="M2" selected>M2</option>'
+	}
+	else{
+		yearselectmodify+='<option value="M2">M2</option>'
+	}
+	document.getElementById("yearstudymodify").innerHTML+=yearselectmodify;
 
-	// //création de la liste des parcours
-	// var parselect='';
-	// for (var g in parcours){
-	// 	for (var n=0;n<parcours[g].length;n++){
-	// 		var namepar= parcours[g][n].name;
-	// 		var typepar= parcours[g][n].value;
-	// 		parselect +=' <input type="checkbox" name="'+namepar+'" id="'+namepar+'" value="'+typepar+'" /> <label for="'+namepar+'">'+namepar+'</label>';
-	// 	}
-	// }	
-	// document.getElementById("parcours").innerHTML+=parselect;
-	// getCalendarJSON();
+	//création de la liste des parcours
+	var parselectmodify='';
+	for (var g in parcours){
+		var namepar= parcours[g].name;
+		var typepar= parcours[g].value;
+		parselectmodify +=' <input type="checkbox" name="'+namepar+'" id="'+namepar+'" value="'+typepar+'" checked /> <label for="'+namepar+'">'+namepar+'</label>';
+		}
+	document.getElementById("parcoursmodify").innerHTML+=parselectmodify;
+	}
+
+	if (titleparse[0]==="C"){
+		//remplissage des lecturers
+		var lectselect='';
+		for (var llec in listlect){
+			if (listlect[llec]===lect){
+				lectselect +='<option value="'+listlect[llec]+'" selected>'+listlect[llec]+'</option>';
+			}
+			else{
+			lectselect +='<option value="'+listlect[llec]+'">'+listlect[llec]+'</option>';
+			}
+		}
+		document.getElementById("lecturermodify").innerHTML+=lectselect;
+
+		//création de la liste des groupes
+		var groupselectmodify='';
+		
+		for (var g in groups){
+			var namegroup= groups[g].name;
+			if (namegroup===group){
+				groupselectmodify +='<option value="'+namegroup+'" selected>'+namegroup+'</option>';
+			}
+			else{
+				groupselectmodify +='<option value="'+namegroup+'">'+namegroup+'</option>';
+			}
+		}
+		document.getElementById("groupsmodify").innerHTML+=groupselectmodify;
+	}
 }
 
 
@@ -647,14 +689,14 @@ function initmodifyCalendar(lect,yearstart,monthstart,daystart,hourstart,minstar
 function selectRoomModify(){
 	var locmodify=document.getElementById('locationmodify').value;
 	for (var l=0;l<listbatmodify.length;l++){
-		if (locmodify!==listbatmodify[l]){
-			var html='<h3>Room</h3>     <input type="text" name="room" id="room" required/>';
-		}
-		else{
+		if (locmodify===listbatmodify[l]){
 			var html=' ';
 		}
-		console.log(html);
 	}
+	if (html!==' '){
+			var html='<h3>Room</h3>     <input type="text" name="room" id="room" required/>';
+		}
+
 	document.getElementById("roomsmodify").innerHTML=html;
 }
 

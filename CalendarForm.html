@@ -66,7 +66,7 @@
 				<select name="end" id="endYearevent"></select><select name="end" id="endMonthevent"></select><select name="end" id="endDayevent"></select>-<select name="end" id="endHourevent"></select>h<select name="end" id="endMinevent"></select>
 				<div id="locations"><h3>Location</h3><select name="location" id="locationevent" onChange="selectRoomEvent()"></select><span id="roomsevent"></span></div>
 				<span id="students"><h3>Students</h3><select name="yearstudy" id="yearstudy"><option value="1">M1</option><option value="2">M2</option><option value="3">All</option></select><span id="parcours"></span><br><br>
-				<h3>Obligation</h3><input type="radio" name="required" value="required" id="choice" />Required <input type="radio" name="elective" value="elective" id="choice" />Elective</span><br><br><br>
+				<h3>Obligation</h3><input type="radio" name="choice" value="required" id="choice" />Required <input type="radio" name="choice" value="elective" id="choice" />Elective</span><br><br><br>
 				<h3>Notes</h3><textarea name="notes" id="contentevent" rows="10" cols="50" required></textarea>
 
 				<input type="submit"  onclick="createCalendarEvent()" value="Create" />

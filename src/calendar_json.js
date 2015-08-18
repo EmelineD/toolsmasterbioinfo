@@ -11,6 +11,18 @@
         "image"     : "biology",
         "comment"   : "AEB-Stats"
     },
+       {
+        "ID"        : "C1F20150731T145910@userGithub", 
+        "summary"   : "KM1BS10U-Stats", 
+        "date_start": "20160831T1400", 
+        "date_end"  : "20160831T1715", 
+        "group"     : "All",
+        "lecturer"  : "Beurton-Aimar M",
+        "location"  : "AmphiA5::Carreire",
+        "description" : "Read the article \"Beetroot Plantations in Himalaya\" before coming.",
+        "image"     : "biology",
+        "comment"   : "AEB-Stats"
+    },
     {
         "ID"        : "C1F20150731T145915@username",
         "summary"   : "J1BS7M01-Imag",
@@ -45,7 +57,7 @@
         "description"   : ""
     },
     {
-        "ID"            : "E1F20150801T1459@jeesay",
+        "ID"            : "E0F20150801T1459@jeesay",
         "summary"       : "Summer holidays",
         "date_start"    : "20150701", 
         "date_end"      : "20150831", 
