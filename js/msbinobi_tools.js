@@ -1124,6 +1124,7 @@ var listbat = [];
 var listbatmodify = [];
 var myCalendar;
 
+
 function initCalendar() {
 	//création des listes de cours
 	var sem;
@@ -1375,15 +1376,14 @@ function createCalendarCourse(){
 		var parca = stusplit[i].split("[");	
 		parc.push(parca[0]); //récupération des noms de groupes seuls
 	}
-	var sum=0;
-	for(var p in parc){
-		console.log(p);
-		sum=sum+parcours["Parcours"][p].value; //addition des valeurs des groupes
-	}
-	var sumsum=(sum.toString(16))
-	if (sumsum==="f"){
+	// var sum=0;
+	// for(var p in parc){
+	// 	sum=sum+parcours[p].value; //addition des valeurs des groupes
+	// }
+	// var sumsum=(sum.toString(16))
+	// if (sumsum==="f"){
 		sumsum="F" //passage de la valeur en hexadecimal
-	}
+	// }
 		//ajout dans l'objet de l'ID et du summary
 		newCourse.id = "C"+year+sumsum+creadate+"@"+author;
 		newCourse.summary=summary
@@ -1536,9 +1536,24 @@ function createCalendarEvent(){
    	console.log(newEvent);
 
    	JSON.stringify(newEvent);
+
+   	writeCalendar(newCourse)
    }
 
-function modifyCalendar(){
+
+
+function deleteNews(){
+  		var nbtitles = document.getElementsByClassName("titlecaldel");
+		for (var i = 0; i< nbtitles.length; i++)
+		{
+		    if (nbtitles[i].checked)
+		    {
+		        myCalendar.splice(i,1);
+	        }
+		}
+		getCalendarJSON();
+}
+;function modifyCalendar(){
    	var nbtitles = document.getElementsByClassName("titlecalmod");
    	for (var i = 0; i<= nbtitles.length; i++)
    	{
@@ -1809,20 +1824,7 @@ function selectRoomModify(){
 		}
 
 	document.getElementById("roomsmodify").innerHTML=html;
-}
-
-function deleteNews(){
-  		var nbtitles = document.getElementsByClassName("titlecaldel");
-		for (var i = 0; i< nbtitles.length; i++)
-		{
-		    if (nbtitles[i].checked)
-		    {
-		        myCalendar.splice(i,1);
-	        }
-		}
-		getCalendarJSON();
-}
-;var locations = {
+};var locations = {
     'CREMI::Talence' : {
         'name': "CREMI::Talence",
         'loc' : "Talence",
