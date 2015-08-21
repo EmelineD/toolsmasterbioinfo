@@ -18,5 +18,17 @@ io.sockets.on('connection', function (socket) {
 });
 
 
+fs.writeFileSync("essai_calendar.json", newCourse, "UTF-8");
 
 server.listen(8080);
+
+/*http://itinet.fr/thire/cours/cours_nodejs_lecture_ecriture_fichier/slide5.html
+http://www.faire-des-jeux.com/node-js-express-servir-des-fichiers-html/
+http://connect.ed-diamond.com/GNU-Linux-Magazine/GLMF-136/Node.js-du-Javascript-sur-votre-serveur
+http://naholyr.fr/2011/06/bonnes-pratiques-asynchrone-javascript-nodejs/
+http://blog.idleman.fr/nodejs-03-construction-dun-mini-projet-partie-1/
+http://blog.idleman.fr/nodejs-04-construction-dun-mini-projet-partie2/
+
+Pour Windows : http://blog.lesieur.name/installer-et-utiliser-nodejs-sous-windows/
+
+*/

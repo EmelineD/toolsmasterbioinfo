@@ -174,11 +174,13 @@ function updateCalendarDisplay() {
 	document.getElementById("listForModifycal").innerHTML='';
 	document.getElementById("listForDeletioncal").innerHTML='';
 	var listmodify='';
+	var listdelete='';
 	  for(var n in myCalendar){
   		listmodify+='<input type="radio" name="titlecalmod" id="'+myCalendar[n]["summary"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'" class="titlecalmod"/> <label for="'+myCalendar[n]["summary"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'">'+myCalendar[n]["summary"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'</label><br />'; 
-  		// document.getElementById("listForDeletion").innerHTML+='<input type="radio" name="titlenewsdel" id="'+myNews[n]["title"]+'" class="titlenewsdel"/> <label for="'+myNews[n]["title"]+'">'+myNews[n]["title"]+'</label><br />'; 
+  		listdelete+='<input type="radio" name="titlecaldel" id="'+myCalendar[n]["summary"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'" class="titlecaldel"/> <label for="'+myCalendar[n]["summary"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'">'+myCalendar[n]["summary"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'</label><br />'; 
 	}
-	document.getElementById("listForModifycal").innerHTML+=listmodify;
+	document.getElementById("listForModifycal").innerHTML=listmodify;
+	document.getElementById("listForDeletioncal").innerHTML=listdelete;
 }
 
 function selectUE(){
