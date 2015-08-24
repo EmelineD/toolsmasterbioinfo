@@ -2,8 +2,15 @@ pour auteur : ne demander qu'une fois ou à chaque fois ? le mettre en popup apr
 
 vérifier pour composition ID
 
+pour auteur github, voir pour login sur page différente
 
-/*http://itinet.fr/thire/cours/cours_nodejs_lecture_ecriture_fichier/slide5.html
+https://github.com/pksunkara/octonode#usage
+
+
+
+
+
+http://itinet.fr/thire/cours/cours_nodejs_lecture_ecriture_fichier/slide5.html
 http://www.faire-des-jeux.com/node-js-express-servir-des-fichiers-html/
 http://connect.ed-diamond.com/GNU-Linux-Magazine/GLMF-136/Node.js-du-Javascript-sur-votre-serveur
 http://naholyr.fr/2011/06/bonnes-pratiques-asynchrone-javascript-nodejs/
@@ -12,4 +19,3 @@ http://blog.idleman.fr/nodejs-04-construction-dun-mini-projet-partie2/
 
 Pour Windows : http://blog.lesieur.name/installer-et-utiliser-nodejs-sous-windows/
 
-*/
