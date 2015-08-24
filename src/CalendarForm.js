@@ -323,6 +323,8 @@ function createCalendarCourse(){
 	//extraction de la description du cours
 	newCourse.description=document.getElementById("content").value;
 
+	console.log(newCourse);
+
 	//passage de l'objet js en JSON
 	JSON.stringify(newCourse);
 
@@ -372,7 +374,7 @@ function createCalendarEvent(){
 	var daystart=document.getElementById("startDayevent").value;
 	var hourstart=document.getElementById("startHourevent").value;
 	var minstart=document.getElementById("startMinevent").value;
-	if ((hourstart===00 && minstart===00) || (allday.checked) ){
+	if ((hourstart==="00" && minstart==="00") || (alldayevent.checked) ){
 		var hourstart="00";
 		var minstart="00";
 		var yearend=yearstart;
@@ -400,7 +402,8 @@ function createCalendarEvent(){
 		newEvent.location=bat;
 	}
 	else{
-		var room=document.getElementById("room").value;
+		var room=document.getElementById("roomevent").value;
+		console.log(room);
 		newEvent.location="room"+room+"@"+bat;
 	}
 
@@ -427,13 +430,11 @@ function createCalendarEvent(){
    	console.log(newEvent);
 
    	JSON.stringify(newEvent);
-
-   	writeCalendar(newCourse)
    }
 
 
 
-function deleteNews(){
+function deleteCalendar(){
   		var nbtitles = document.getElementsByClassName("titlecaldel");
 		for (var i = 0; i< nbtitles.length; i++)
 		{

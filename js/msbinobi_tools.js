@@ -1288,7 +1288,7 @@ function updateCalendarDisplay() {
 	var listdelete='';
 	  for(var n in myCalendar){
   		listmodify+='<input type="radio" name="titlecalmod" id="'+myCalendar[n]["summary"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'" class="titlecalmod"/> <label for="'+myCalendar[n]["summary"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'">'+myCalendar[n]["summary"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'</label><br />'; 
-  		listdelete+='<input type="radio" name="titlecalmod" id="'+myCalendar[n]["summary"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'" class="titlecalmod"/> <label for="'+myCalendar[n]["summary"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'">'+myCalendar[n]["summary"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'</label><br />'; 
+  		listdelete+='<input type="radio" name="titlecaldel" id="'+myCalendar[n]["summary"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'" class="titlecaldel"/> <label for="'+myCalendar[n]["summary"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'">'+myCalendar[n]["summary"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'</label><br />'; 
 	}
 	document.getElementById("listForModifycal").innerHTML=listmodify;
 	document.getElementById("listForDeletioncal").innerHTML=listdelete;
@@ -1434,6 +1434,8 @@ function createCalendarCourse(){
 	//extraction de la description du cours
 	newCourse.description=document.getElementById("content").value;
 
+	console.log(newCourse);
+
 	//passage de l'objet js en JSON
 	JSON.stringify(newCourse);
 
@@ -1483,7 +1485,7 @@ function createCalendarEvent(){
 	var daystart=document.getElementById("startDayevent").value;
 	var hourstart=document.getElementById("startHourevent").value;
 	var minstart=document.getElementById("startMinevent").value;
-	if ((hourstart===00 && minstart===00) || (allday.checked) ){
+	if ((hourstart==="00" && minstart==="00") || (alldayevent.checked) ){
 		var hourstart="00";
 		var minstart="00";
 		var yearend=yearstart;
@@ -1511,7 +1513,8 @@ function createCalendarEvent(){
 		newEvent.location=bat;
 	}
 	else{
-		var room=document.getElementById("room").value;
+		var room=document.getElementById("roomevent").value;
+		console.log(room);
 		newEvent.location="room"+room+"@"+bat;
 	}
 
@@ -1544,7 +1547,7 @@ function createCalendarEvent(){
 
 
 
-function deleteNews(){
+function deleteCalendar(){
   		var nbtitles = document.getElementsByClassName("titlecaldel");
 		for (var i = 0; i< nbtitles.length; i++)
 		{
