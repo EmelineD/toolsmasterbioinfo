@@ -34,18 +34,22 @@ function initCalendar() {
 			}
 			if (sem == 7){
 				listUE7.push(ue);
+				listidUE7.push(ue);
 				listUE7.sort();
 			}
 			else if(sem == 8){
 				listUE8.push(ue);
+				listidUE8.push(ue);
 				listUE8.sort();
 			}
 			else if(sem == 9){
 				listUE9.push(ue);
+				listidUE9.push(ue);
 				listUE9.sort();
 			}
 			else if(sem == 10){
 				listUE10.push(ue);
+				listidUE10.push(ue);
 				listUE10.sort();
 			}	
 		}		
@@ -166,7 +170,7 @@ function getCalendarJSON(){
         }
 
     };
-    xhr.open("GET", "http://master-bioinfo-bordeaux.github.io/data/calendar.json", true);
+    xhr.open("GET", "http://master-bioinfo-bordeaux.github.io/data/test.json", true);
     xhr.send(null);
 }
 
@@ -217,21 +221,27 @@ function selectUE(){
 	var sem=document.getElementById('semester').value;
 	sem=parseInt(sem);
 	var listUE;
+	var listidUE;
 	if (sem == 7){
 		listUE=listUE7;
+		listidUE=listidUE7;
 	}
 	else if(sem == 8){
 		listUE=listUE8;
+		listidUE=listidUE8;
 	}
 	else if(sem == 9){
 		listUE=listUE9;
+		listidUE=listidUE9;
 	}
 	else if(sem == 10){
 		listUE=listUE10;
+		listidUE=listidUE10;
 	}
 	var html ='<h3>UE</h3>     <select name="uesemester" id="uesemester"">';
 	for (var m=0;m<listUE.length;m++){
-		html += '<option value="'+listUE[m]+'">'+listUE[m]+'</option>';
+		var ue = listidUE[m];
+		html += '<option value="'+listUE[m]+'" data-acronym="'+myCalendar[ue]["acronym"]+'" >'+listUE[m]+'</option>';
 	}
 	html += '</select>';
 	document.getElementById("ue").innerHTML = html;
@@ -357,8 +367,10 @@ function createCalendarCourse(){
 
 	console.log(newCourse);
 
+
+
 	//passage de l'objet js en JSON
-	JSON.stringify(newCourse);
+	// JSON.stringify(newCourse);
 
 }
 
