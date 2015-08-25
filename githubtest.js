@@ -10,8 +10,8 @@ client.get('/user', {}, function (err, status, body, headers) {
 });
 var ghme           = client.me();
 var ghuser         = client.user('EmelineD');
-var ghrepo         = client.repo('EmelineD/toolsmasterbioinfo');
-var ghorg          = client.org('flatiron');
+var ghrepo         = client.repo('master-bioinfo-bordeaux/master-bioinfo-bordeaux.github.io');
+var ghorg          = client.org('master-bioinfo-bordeaux');
 var ghissue        = client.issue('EmelineD/toolsmasterbioinfo', 37);
 var ghmilestone    = client.milestone('EmelineD/toolsmasterbioinfo', 37);
 var ghlabel        = client.label('EmelineD/toolsmasterbioinfo', 'todo');
@@ -19,6 +19,7 @@ var ghpr           = client.pr('EmelineD/toolsmasterbioinfo', 37);
 var ghgist         = client.gist();
 var ghteam         = client.team(37);
 var ghsearch = client.search();
+console.log(ghrepo);
 
 var auth_url = github.auth.config({
   id: 'EmelineD',
@@ -51,14 +52,29 @@ http.createServer(function(req, res) {
     // Check against CSRF attacks
         if (!state || state[1] != values.state) {
             res.writeHead(403, {'Content-Type': 'text/plain'});
-            console.log(ghuser.client.token.username);
-            ghrepo.readme(function(err, data) {
-                // for (var i in data){
-                //     console.log(data[i]);
-                // }
-                console.log(data);
+            // console.log(ghuser.client.token.username);
+            var Courses=[];
+            var newCourse={};
+            newCourse.id="C2F20150825T085836@EmelineD";
+            newCourse.summary="B1BS7M06-Anglais";
+            newCourse.date_start="20150825T0000";
+            newCourse.date_end="20150825T0000";
+            newCourse.group="All";
+            newCourse.lecturer="Beurton-Aimar M";
+            newCourse.location="AmphiA5::Carreire";
+            newCourse.description="Essai";
+            // newCourse=JSON.stringify(newCourse);
+            Courses.push(newCourse);
+            Courses.push(newCourse);
+            console.log(Courses);
+            Courses=JSON.stringify(Courses,'',4);
+            console.log(Courses);
+            ghrepo.createContents('data/test.json', 'Essai de création de JSON', Courses, function(err, data, headers) {
+                res.end("error: " + err)
+                // console.log("error: " + err);
+                // console.log("data: " + data);
             });
-            res.end('Authentification reussie');
+            // res.end('JSON cree');
         }
         else {
             github.auth.login(values.code, function (err, token) {

@@ -166,7 +166,7 @@ function getCalendarJSON(){
     	}
 		
 	};
-	xhr.open("GET", "src/calendar_json.js", true);
+	xhr.open("GET", "http://toolsmasterbioinfo.github.io/src/essaigithub_json.js", true);
 	xhr.send(null);
 }
 
