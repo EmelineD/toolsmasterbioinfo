@@ -1,13 +1,15 @@
 pour auteur : ne demander qu'une fois ou à chaque fois ? le mettre en popup après create
+ajouter comment (10 premiers caractères si aucun)
 
 vérifier pour composition ID
 
 pour auteur github, voir pour login sur page différente
+bootstrap modal
 
 https://github.com/pksunkara/octonode#usage
 
 
-
+popup en absolute et float à voir pour identification github
 
 
 http://itinet.fr/thire/cours/cours_nodejs_lecture_ecriture_fichier/slide5.html

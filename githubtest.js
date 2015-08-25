@@ -53,16 +53,17 @@ http.createServer(function(req, res) {
         if (!state || state[1] != values.state) {
             res.writeHead(403, {'Content-Type': 'text/plain'});
             // console.log(ghuser.client.token.username);
-            var Courses=[];
+            var Courses={};
             var newCourse={};
-            newCourse.id="C2F20150825T085836@EmelineD";
-            newCourse.summary="B1BS7M06-Anglais";
-            newCourse.date_start="20150825T0000";
-            newCourse.date_end="20150825T0000";
-            newCourse.group="All";
-            newCourse.lecturer="Beurton-Aimar M";
-            newCourse.location="AmphiA5::Carreire";
-            newCourse.description="Essai";
+            var ID="C2F20150825T085836@EmelineD";
+            newCourse[ID].id="C2F20150825T085836@EmelineD";
+            newCourse[ID].summary="B1BS7M06-Anglais";
+            newCourse[ID].date_start="20150825T0000";
+            newCourse[ID].date_end="20150825T0000";
+            newCourse[ID].group="All";
+            newCourse[ID].lecturer="Beurton-Aimar M";
+            newCourse[ID].location="AmphiA5::Carreire";
+            newCourse[ID].description="Essai";
             // newCourse=JSON.stringify(newCourse);
             Courses.push(newCourse);
             Courses.push(newCourse);

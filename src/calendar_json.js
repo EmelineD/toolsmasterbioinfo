@@ -1,51 +1,41 @@
-[
-    {
-        "ID"        : "C1F20150731T145900@userGithub", 
-        "summary"   : "KM1BS10U-Stats", 
-        "date_start": "20160831T1400", 
-        "date_end"  : "20160831T1700", 
+{
+    "C20150731T145923@userGithub" : {
+        "ID"        : "C20150731T145923@userGithub", 
+        "summary"   : "F6BS7M02-Stats", 
+        "date_start": "20150831T1400", 
+        "date_end"  : "20150831T1700", 
         "group"     : "All",
-        "lecturer"  : "Beurton-Aimar M",
+        "lecturer"  : "M Beurton-Aimar",
         "location"  : "room24@ED::Carreire",
         "description" : "Read the article \"Beetroot Plantations in Himalaya\" before coming.",
         "image"     : "biology",
         "comment"   : "AEB-Stats"
     },
-       {
-        "ID"        : "C1F20150731T145910@userGithub", 
-        "summary"   : "KM1BS10U-Stats", 
-        "date_start": "20160831T1400", 
-        "date_end"  : "20160831T1715", 
-        "group"     : "All",
-        "lecturer"  : "Beurton-Aimar M",
-        "location"  : "AmphiA5::Carreire",
-        "description" : "Read the article \"Beetroot Plantations in Himalaya\" before coming.",
-        "image"     : "biology",
-        "comment"   : "AEB-Stats"
-    },
-    {
+   "C1F20150731T145915@username" :  {
         "ID"        : "C1F20150731T145915@username",
         "summary"   : "J1BS7M01-Imag",
         "date_start": "20150804T0800", 
         "date_end"  : "20150804T1200", 
         "group"     : "A",
-        "lecturer"  : "Taveau JC",
+        "lecturer"  : "JC Taveau",
         "location"  : "room24@CREMI::Talence",
         "description"   : "",
         "image"     : "hybrid",
         "comment"   : "BioMod-Imag"
     },
-    {
+   "C1F20150731T145940@username" :  {
         "ID"        : "C1F20150731T145940@username",
         "summary"   : "J1BS7M01-Imag",
         "date_start": "20150804T0800", 
         "date_end"  : "20150804T1200", 
         "group"     : "B",
-        "lecturer"  : "Thébault P",
+        "lecturer"  : "P Thébault",
         "location"  : "room41@ED::Carreire",
-        "description"   : ""
+        "description"   : "",
+        "comment":"Biomod-Imag"
     },
-    {
+    
+    "C2F20150801T1459@jeesay" :  {
         "ID"            : "C2F20150801T1459@jeesay",
         "summary"       : "F1BS0201",
         "comment"       : "StageM2",
@@ -56,8 +46,9 @@
         "location"      : "",
         "description"   : ""
     },
-    {
-        "ID"            : "E0F20150801T1459@jeesay",
+    
+   "E1F20150801T1459@jeesay" :  {
+        "ID"            : "E1F20150801T1459@jeesay",
         "summary"       : "Summer holidays",
         "date_start"    : "20150701", 
         "date_end"      : "20150831", 
@@ -66,9 +57,13 @@
         "lecturer"      : "",
         "description"   : "",
         "students"      : "C++BIO[required],GENORG[required],ORGECO[required],BSC[required]",
-        "image"         : "summer"
+        "image"         : "summer",
+        "comment"       : "Summer Hol" 
+
     },
-    {
+
+    
+   "E0F20150731T1459@jeesay" :  {
         "ID"            : "E0F20150731T145923@jeesay",
         "summary"       : "Réunion de rentrée M1 et M2",
         "lecturer"      : "",
@@ -78,6 +73,6 @@
         "students"      : "C++BIO[required],GENORG[required],ORGECO[required],BSC[required]",
         "description"   : "Présentation des divers enseignements, organisation du master pour chacune des années.",
         "image"         : "calendar",
-        "comment"       : ""
+        "comment"       : "Réunion  ren"
     }
-]
+}

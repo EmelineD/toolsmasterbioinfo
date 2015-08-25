@@ -1164,8 +1164,8 @@ function initCalendar() {
 	//création de la liste des professeurs
 	var lectselect='';
 	for (var lec in lecturers){
-			var namelec= lecturers[lec].name;
-			listlect.push(namelec)
+		var namelec= lecturers[lec].name;
+		listlect.push(namelec)
 	}
 	listlect.sort();
 	for (var llec in listlect){
@@ -1273,12 +1273,12 @@ function getCalendarJSON(){
 	xhr.onreadystatechange = function() {
 		if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 0)) {
         	myCalendar = JSON.parse(xhr.responseText); // Données textuelles récupérées
-	    		updateCalendarDisplay(myCalendar);
-    	}
-		
-	};
-	xhr.open("GET", "http://toolsmasterbioinfo.github.io/src/essaigithub_json.js", true);
-	xhr.send(null);
+        	updateCalendarDisplay(myCalendar);
+        }
+
+    };
+    xhr.open("GET", "http://master-bioinfo-bordeaux.github.io/data/calendar.json", true);
+    xhr.send(null);
 }
 
 function updateCalendarDisplay() {
@@ -1286,9 +1286,10 @@ function updateCalendarDisplay() {
 	document.getElementById("listForDeletioncal").innerHTML='';
 	var listmodify='';
 	var listdelete='';
-	  for(var n in myCalendar){
-  		listmodify+='<input type="radio" name="titlecalmod" id="'+myCalendar[n]["summary"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'" class="titlecalmod"/> <label for="'+myCalendar[n]["summary"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'">'+myCalendar[n]["summary"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'</label><br />'; 
-  		listdelete+='<input type="radio" name="titlecaldel" id="'+myCalendar[n]["summary"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'" class="titlecaldel"/> <label for="'+myCalendar[n]["summary"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'">'+myCalendar[n]["summary"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'</label><br />'; 
+	for(var n in myCalendar){
+
+		listmodify+='<input type="radio" name="titlecalmod" id="'+myCalendar[n]["comment"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'" class="titlecalmod"/> <label for="'+myCalendar[n]["comment"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'">'+myCalendar[n]["comment"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'</label><br />'; 
+		listdelete+='<input type="radio" name="titlecaldel" id="'+myCalendar[n]["comment"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'" class="titlecaldel"/> <label for="'+myCalendar[n]["comment"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'">'+myCalendar[n]["comment"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'</label><br />'; 
 	}
 	document.getElementById("listForModifycal").innerHTML=listmodify;
 	document.getElementById("listForDeletioncal").innerHTML=listdelete;
@@ -1371,6 +1372,8 @@ function createCalendarCourse(){
 		//extraction de la somme des valeurs des parcours ayant ce cours
 	var summary=document.getElementById("uesemester").value; //extraction de l'UE entière
 	var ue= summary.split("-"); //séparation pour obtenir l'ID et l'acronyme de l'UE 
+	var acronym=course_data[ue[0]].acronym; //récupération de l'acronyme pour le titre
+	newCourse.comment=acronym;
 	var stu= course_data[ue[0]].students; //sauvegarde de l'ID puis recherche des étudiants pour cette UE
 	var stusplit = stu.split(","); //séparation des différents groupes
 	var parc=[];
@@ -1474,7 +1477,7 @@ function createCalendarEvent(){
 		sumsum="F" 
 	}
 		//creation de l'ID à partir des données extraites
-		newEvent.id = "E"+year+sumsum+creadate+"@"+author;
+		newEvent.id = "M"+year+sumsum+creadate+"@"+author;
 
 	//extraction du titre
 	newEvent.summary=document.getElementById("summaryevent").value;
@@ -1538,6 +1541,14 @@ function createCalendarEvent(){
    	//extraction de l'obligation ou non d'assister à l'event
    	newEvent.presence=document.getElementById("choice").value;
 
+   	summary=document.getElementById("summaryevent").value;
+   	if (summary.length >=10){
+   		newEvent.comment=document.getElementById("summaryevent").value.substring(0,11);
+   	}
+   	else{
+   		newEvent.comment=document.getElementById("summaryevent").value;
+   	}
+
    	console.log(newEvent);
 
    	JSON.stringify(newEvent);
@@ -1545,17 +1556,17 @@ function createCalendarEvent(){
 
 
 
-function deleteCalendar(){
-  		var nbtitles = document.getElementsByClassName("titlecaldel");
-		for (var i = 0; i< nbtitles.length; i++)
-		{
-		    if (nbtitles[i].checked)
-		    {
-		        myCalendar.splice(i,1);
-	        }
-		}
-		getCalendarJSON();
-}
+   function deleteCalendar(){
+   	var nbtitles = document.getElementsByClassName("titlecaldel");
+   	for (var i = 0; i< nbtitles.length; i++)
+   	{
+   		if (nbtitles[i].checked)
+   		{
+   			myCalendar.splice(i,1);
+   		}
+   	}
+   	getCalendarJSON();
+   }
 ;function modifyCalendar(){
    	var nbtitles = document.getElementsByClassName("titlecalmod");
    	for (var i = 0; i<= nbtitles.length; i++)
@@ -1949,150 +1960,3 @@ var parcours = {
         'value':8
     }
 }
-;[
-    {
-        "ID"        : "C1F20150731T145900@userGithub", 
-        "summary"   : "KM1BS10U-Stats", 
-        "date_start": "20160831T1400", 
-        "date_end"  : "20160831T1700", 
-        "group"     : "All",
-        "lecturer"  : "Beurton-Aimar M",
-        "location"  : "room24@ED::Carreire",
-        "description" : "Read the article \"Beetroot Plantations in Himalaya\" before coming.",
-        "image"     : "biology",
-        "comment"   : "AEB-Stats"
-    },
-       {
-        "ID"        : "C1F20150731T145910@userGithub", 
-        "summary"   : "KM1BS10U-Stats", 
-        "date_start": "20160831T1400", 
-        "date_end"  : "20160831T1715", 
-        "group"     : "All",
-        "lecturer"  : "Beurton-Aimar M",
-        "location"  : "AmphiA5::Carreire",
-        "description" : "Read the article \"Beetroot Plantations in Himalaya\" before coming.",
-        "image"     : "biology",
-        "comment"   : "AEB-Stats"
-    },
-    {
-        "ID"        : "C1F20150731T145915@username",
-        "summary"   : "J1BS7M01-Imag",
-        "date_start": "20150804T0800", 
-        "date_end"  : "20150804T1200", 
-        "group"     : "A",
-        "lecturer"  : "Taveau JC",
-        "location"  : "room24@CREMI::Talence",
-        "description"   : "",
-        "image"     : "hybrid",
-        "comment"   : "BioMod-Imag"
-    },
-    {
-        "ID"        : "C1F20150731T145940@username",
-        "summary"   : "J1BS7M01-Imag",
-        "date_start": "20150804T0800", 
-        "date_end"  : "20150804T1200", 
-        "group"     : "B",
-        "lecturer"  : "Thébault P",
-        "location"  : "room41@ED::Carreire",
-        "description"   : ""
-    },
-    {
-        "ID"            : "C2F20150801T1459@jeesay",
-        "summary"       : "F1BS0201",
-        "comment"       : "StageM2",
-        "date_start"    : "20150301", 
-        "date_end"      : "20150831", 
-        "group"         : "All",
-        "lecturer"      : "",
-        "location"      : "",
-        "description"   : ""
-    },
-    {
-        "ID"            : "E0F20150801T1459@jeesay",
-        "summary"       : "Summer holidays",
-        "date_start"    : "20150701", 
-        "date_end"      : "20150831", 
-        "location"      : "",
-        "groups"        : "All",
-        "lecturer"      : "",
-        "description"   : "",
-        "students"      : "C++BIO[required],GENORG[required],ORGECO[required],BSC[required]",
-        "image"         : "summer"
-    },
-    {
-        "ID"            : "E0F20150731T145923@jeesay",
-        "summary"       : "Réunion de rentrée M1 et M2",
-        "lecturer"      : "",
-        "date_start"    : "20150701T0900", 
-        "date_end"      : "20150831T1200",
-        "location"      : "LaBRI::Talence",
-        "students"      : "C++BIO[required],GENORG[required],ORGECO[required],BSC[required]",
-        "description"   : "Présentation des divers enseignements, organisation du master pour chacune des années.",
-        "image"         : "calendar",
-        "comment"       : ""
-    }
-];[
-    {
-        "ID": "20150901T140039@userGithub",
-        "date": "20150901",
-        "title": "NEWS #1: RENTREE 2015 M1 M2",
-        "contents": "Curabitur feugiat urna a eros viverra, quis vulputate ipsum sollicitudin. Vestibulum efficitur magna nulla, porta tincidunt nunc lobortis vitae.<!--more-->Here is the remaining text only available if you click on the 'More...' button ... Vivamus a leo ipsum. Curabitur rutrum dictum mauris quis suscipit. Aliquam auctor metus non dolor rhoncus scelerisque.",
-        "image": "misc_calendar" 
-    },
-    {
-        "ID": "20150901T140039@userGithub",
-        "date" : "20150829", 
-        "title": "NEWS #2: Etiam a metus sit",
-        "contents": "Etiam a metus sit amet lectus facilisis accumsan vitae sit amet mauris. Nulla facilisi. Praesent turpis magna",        
-        "image": "bio_flask" 
-    },
-    {
-        "ID": "20150901T140039@userGithub",
-        "date" : "20150819", 
-        "title": "NEWS #3: Lorem ipsum dolor sit amet",
-        "contents": "Curabitur feugiat urna a eros viverra, quis vulputate ipsum sollicitudin. Vestibulum efficitur magna nulla, porta tincidunt nunc lobortis vitae.<!--more-->Here is the remaining text only available if you click on the 'More...' button ... Vivamus a leo ipsum. Curabitur rutrum dictum mauris quis suscipit. Aliquam auctor metus non dolor rhoncus scelerisque.",
-        "image": "teach_keyboard" 
-    },
-    {
-        "ID": "20150901T140039@userGithub",
-        "date" : "2015-07-23",
-        "title": "NEWS #4: Nulla facilisi. Praesent turpis magna.",
-        "contents": "Curabitur feugiat urna a eros viverra, quis vulputate ipsum sollicitudin. Vestibulum efficitur magna nulla, porta tincidunt nunc lobortis vitae.<!--more-->Here is the remaining text only available if you click on the 'More...' button ... Vivamus a leo ipsum. Curabitur rutrum dictum mauris quis suscipit. Aliquam auctor metus non dolor rhoncus scelerisque.",
-        "image": "teach_conf" 
-    },
-    {
-        "ID": "20150901T140039@userGithub",
-        "date" : "2015-07-11", 
-        "title": "NEWS #5: Lectus facilisis accumsan",
-        "contents": "Curabitur feugiat urna a eros viverra, quis vulputate ipsum sollicitudin. Vestibulum efficitur magna nulla, porta tincidunt nunc lobortis vitae.<!--more-->Here is the remaining text only available if you click on the 'More...' button ... Vivamus a leo ipsum. Curabitur rutrum dictum mauris quis suscipit. Aliquam auctor metus non dolor rhoncus scelerisque.",
-        "image": "bio_rack" 
-    },
-    {
-        "ID": "20150901T140039@userGithub",
-        "date" : "2015-06-21", 
-        "title": "NEWS #6: At last but not least",
-        "contents": "Curabitur feugiat urna a eros viverra, quis vulputate ipsum sollicitudin. Vestibulum efficitur magna nulla, porta tincidunt nunc lobortis vitae.<!--more-->Here is the remaining text only available if you click on the 'More...' button ... Vivamus a leo ipsum. Curabitur rutrum dictum mauris quis suscipit. Aliquam auctor metus non dolor rhoncus scelerisque.",
-        "image": "misc_calendar" 
-    },
-    {
-        "ID": "20150901T140039@userGithub",
-        "date" : "2015-06-19",
-        "title": "NEWS #7: At last but not least",
-        "contents": "Curabitur feugiat urna a eros viverra, quis vulputate ipsum sollicitudin. Vestibulum efficitur magna nulla, porta tincidunt nunc lobortis vitae.<!--more-->Here is the remaining text only available if you click on the 'More...' button ... Vivamus a leo ipsum. Curabitur rutrum dictum mauris quis suscipit. Aliquam auctor metus non dolor rhoncus scelerisque.",
-        "image": "misc_calendar" 
-    },
-    {
-        "ID": "20150901T140039@userGithub",
-        "date" : "2015-05-30", 
-        "title": "NEWS #8: At last but not least",
-        "contents": "Curabitur feugiat urna a eros viverra, quis vulputate ipsum sollicitudin. Vestibulum efficitur magna nulla, porta tincidunt nunc lobortis vitae.<!--more-->Here is the remaining text only available if you click on the 'More...' button ... Vivamus a leo ipsum. Curabitur rutrum dictum mauris quis suscipit. Aliquam auctor metus non dolor rhoncus scelerisque.",
-        "image": "misc_calendar" 
-    },
-    {
-        "ID": "20150901T140039@userGithub",
-        "date" : "2015-05-07",
-        "title": "NEWS #9: At last but not least",
-        "contents": "Curabitur feugiat urna a eros viverra, quis vulputate ipsum sollicitudin. Vestibulum efficitur magna nulla, porta tincidunt nunc lobortis vitae.<!--more-->Here is the remaining text only available if you click on the 'More...' button ... Vivamus a leo ipsum. Curabitur rutrum dictum mauris quis suscipit. Aliquam auctor metus non dolor rhoncus scelerisque.",
-        "image": "misc_calendar" 
-    }
-]

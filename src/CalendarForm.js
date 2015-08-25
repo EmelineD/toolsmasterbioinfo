@@ -53,8 +53,8 @@ function initCalendar() {
 	//création de la liste des professeurs
 	var lectselect='';
 	for (var lec in lecturers){
-			var namelec= lecturers[lec].name;
-			listlect.push(namelec)
+		var namelec= lecturers[lec].name;
+		listlect.push(namelec)
 	}
 	listlect.sort();
 	for (var llec in listlect){
@@ -162,12 +162,12 @@ function getCalendarJSON(){
 	xhr.onreadystatechange = function() {
 		if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 0)) {
         	myCalendar = JSON.parse(xhr.responseText); // Données textuelles récupérées
-	    		updateCalendarDisplay(myCalendar);
-    	}
-		
-	};
-	xhr.open("GET", "http://toolsmasterbioinfo.github.io/src/essaigithub_json.js", true);
-	xhr.send(null);
+        	updateCalendarDisplay(myCalendar);
+        }
+
+    };
+    xhr.open("GET", "http://master-bioinfo-bordeaux.github.io/data/calendar.json", true);
+    xhr.send(null);
 }
 
 function updateCalendarDisplay() {
@@ -175,9 +175,10 @@ function updateCalendarDisplay() {
 	document.getElementById("listForDeletioncal").innerHTML='';
 	var listmodify='';
 	var listdelete='';
-	  for(var n in myCalendar){
-  		listmodify+='<input type="radio" name="titlecalmod" id="'+myCalendar[n]["summary"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'" class="titlecalmod"/> <label for="'+myCalendar[n]["summary"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'">'+myCalendar[n]["summary"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'</label><br />'; 
-  		listdelete+='<input type="radio" name="titlecaldel" id="'+myCalendar[n]["summary"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'" class="titlecaldel"/> <label for="'+myCalendar[n]["summary"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'">'+myCalendar[n]["summary"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'</label><br />'; 
+	for(var n in myCalendar){
+
+		listmodify+='<input type="radio" name="titlecalmod" id="'+myCalendar[n]["comment"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'" class="titlecalmod"/> <label for="'+myCalendar[n]["comment"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'">'+myCalendar[n]["comment"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'</label><br />'; 
+		listdelete+='<input type="radio" name="titlecaldel" id="'+myCalendar[n]["comment"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'" class="titlecaldel"/> <label for="'+myCalendar[n]["comment"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'">'+myCalendar[n]["comment"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'</label><br />'; 
 	}
 	document.getElementById("listForModifycal").innerHTML=listmodify;
 	document.getElementById("listForDeletioncal").innerHTML=listdelete;
@@ -260,6 +261,8 @@ function createCalendarCourse(){
 		//extraction de la somme des valeurs des parcours ayant ce cours
 	var summary=document.getElementById("uesemester").value; //extraction de l'UE entière
 	var ue= summary.split("-"); //séparation pour obtenir l'ID et l'acronyme de l'UE 
+	var acronym=course_data[ue[0]].acronym; //récupération de l'acronyme pour le titre
+	newCourse.comment=acronym;
 	var stu= course_data[ue[0]].students; //sauvegarde de l'ID puis recherche des étudiants pour cette UE
 	var stusplit = stu.split(","); //séparation des différents groupes
 	var parc=[];
@@ -363,7 +366,7 @@ function createCalendarEvent(){
 		sumsum="F" 
 	}
 		//creation de l'ID à partir des données extraites
-		newEvent.id = "E"+year+sumsum+creadate+"@"+author;
+		newEvent.id = "M"+year+sumsum+creadate+"@"+author;
 
 	//extraction du titre
 	newEvent.summary=document.getElementById("summaryevent").value;
@@ -427,6 +430,14 @@ function createCalendarEvent(){
    	//extraction de l'obligation ou non d'assister à l'event
    	newEvent.presence=document.getElementById("choice").value;
 
+   	summary=document.getElementById("summaryevent").value;
+   	if (summary.length >=10){
+   		newEvent.comment=document.getElementById("summaryevent").value.substring(0,11);
+   	}
+   	else{
+   		newEvent.comment=document.getElementById("summaryevent").value;
+   	}
+
    	console.log(newEvent);
 
    	JSON.stringify(newEvent);
@@ -434,14 +445,14 @@ function createCalendarEvent(){
 
 
 
-function deleteCalendar(){
-  		var nbtitles = document.getElementsByClassName("titlecaldel");
-		for (var i = 0; i< nbtitles.length; i++)
-		{
-		    if (nbtitles[i].checked)
-		    {
-		        myCalendar.splice(i,1);
-	        }
-		}
-		getCalendarJSON();
-}
+   function deleteCalendar(){
+   	var nbtitles = document.getElementsByClassName("titlecaldel");
+   	for (var i = 0; i< nbtitles.length; i++)
+   	{
+   		if (nbtitles[i].checked)
+   		{
+   			myCalendar.splice(i,1);
+   		}
+   	}
+   	getCalendarJSON();
+   }
