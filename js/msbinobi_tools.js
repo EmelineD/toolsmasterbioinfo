@@ -1287,10 +1287,39 @@ function updateCalendarDisplay() {
 	var listmodify='';
 	var listdelete='';
 	for(var n in myCalendar){
+		var years= myCalendar[n]["date_start"].substring(0,4);
+		var months= myCalendar[n]["date_start"].substring(4,6);
+		var days=myCalendar[n]["date_start"].substring(6,8);
+		if (myCalendar[n]["date_start"].length>8)
+		{
+			var hours=" "+myCalendar[n]["date_start"].substring(9,11)+"h";
+			var mins=myCalendar[n]["date_start"].substring(11,13)+" ";
+		}
+		else
+		{
+			var hours='';
+			var mins='';
+		}
+		var datestart=years+"/"+months+"/"+days+hours+mins; 
 
-		listmodify+='<input type="radio" name="titlecalmod" id="'+myCalendar[n]["comment"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'" class="titlecalmod"/> <label for="'+myCalendar[n]["comment"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'">'+myCalendar[n]["comment"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'</label><br />'; 
-		listdelete+='<input type="radio" name="titlecaldel" id="'+myCalendar[n]["comment"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'" class="titlecaldel"/> <label for="'+myCalendar[n]["comment"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'">'+myCalendar[n]["comment"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'</label><br />'; 
+		var yeare = myCalendar[n]["date_end"].substring(0,4);
+		var monthe= myCalendar[n]["date_end"].substring(4,6);
+		var daye=myCalendar[n]["date_end"].substring(6,8);
+		if (myCalendar[n]["date_end"].length>8)
+		{
+			var houre=" "+myCalendar[n]["date_end"].substring(9,11)+"h";
+			var mine=myCalendar[n]["date_end"].substring(11,13)+" ";
+		}
+		else
+		{
+			var houre='';
+			var mine='';
+		}
+		var dateend=yeare+"/"+monthe+"/"+daye+houre+mine; 
+		listmodify+='<input type="radio" name="titlecalmod" id="'+myCalendar[n]["ID"]+'" class="titlecalmod"/> <label for="'+myCalendar[n]["comment"]+'-'+datestart+'-'+dateend+'">'+myCalendar[n]["comment"]+' : '+datestart+' to '+dateend+'</label><br />'; 
+		listdelete+='<input type="radio" name="titlecaldel" id="'+myCalendar[n]["ID"]+'" class="titlecaldel"/> <label for="'+myCalendar[n]["comment"]+'-'+datestart+'-'+dateend+'">'+myCalendar[n]["comment"]+' : '+datestart+' to '+dateend+'</label><br />'; 
 	}
+
 	document.getElementById("listForModifycal").innerHTML=listmodify;
 	document.getElementById("listForDeletioncal").innerHTML=listdelete;
 }
@@ -1558,13 +1587,16 @@ function createCalendarEvent(){
 
    function deleteCalendar(){
    	var nbtitles = document.getElementsByClassName("titlecaldel");
+   	console.log(myCalendar);
    	for (var i = 0; i< nbtitles.length; i++)
    	{
    		if (nbtitles[i].checked)
    		{
-   			myCalendar.splice(i,1);
+   			var ID=nbtitles[i]["id"];
+   			delete myCalendar[ID];
    		}
    	}
+   	console.log(myCalendar);
    	getCalendarJSON();
    }
 ;function modifyCalendar(){
@@ -1573,35 +1605,36 @@ function createCalendarEvent(){
    	{
    		if (nbtitles[i].checked)
    		{
-   			var yearstart=myCalendar[i].date_start.substring(0,4);
-   			var monthstart=myCalendar[i].date_start.substring(4,6);
-   			var daystart=myCalendar[i].date_start.substring(6,8);
+   			var ID=nbtitles[i]["id"];
+   			var yearstart=myCalendar[ID].date_start.substring(0,4);
+   			var monthstart=myCalendar[ID].date_start.substring(4,6);
+   			var daystart=myCalendar[ID].date_start.substring(6,8);
    			var hourstart="00";
    			var minstart="00";
-   			if (myCalendar[i].date_start.charAt(8)==="T"){
-   				daystart=myCalendar[i].date_start.substring(6,8);
-   				hourstart=myCalendar[i].date_start.substring(9,11);	
-   				minstart=myCalendar[i].date_start.substring(11);
+   			if (myCalendar[ID].date_start.charAt(8)==="T"){
+   				daystart=myCalendar[ID].date_start.substring(6,8);
+   				hourstart=myCalendar[ID].date_start.substring(9,11);	
+   				minstart=myCalendar[ID].date_start.substring(11);
    			}
-   			var yearend=myCalendar[i].date_end.substring(0,4);
-   			var monthend=myCalendar[i].date_end.substring(4,6);
-   			var dayend=myCalendar[i].date_end.substring(6,8);
+   			var yearend=myCalendar[ID].date_end.substring(0,4);
+   			var monthend=myCalendar[ID].date_end.substring(4,6);
+   			var dayend=myCalendar[ID].date_end.substring(6,8);
    			var hourend="00";
    			var minend="00";
-   			if (myCalendar[i].date_end.charAt(8)==="T"){
-   				dayend=myCalendar[i].date_end.substring(6,8);
-   				hourend=myCalendar[i].date_end.substring(9,11);	
-   				minend=myCalendar[i].date_end.substring(11)
+   			if (myCalendar[ID].date_end.charAt(8)==="T"){
+   				dayend=myCalendar[ID].date_end.substring(6,8);
+   				hourend=myCalendar[ID].date_end.substring(9,11);	
+   				minend=myCalendar[ID].date_end.substring(11)
    			}
-   			var loc=myCalendar[i].location.split('@');
-   			var lect=myCalendar[i]["lecturer"];
-   			var group=myCalendar[i]["group"];
-   			var contentmodify=myCalendar[i]["description"]
+   			var loc=myCalendar[ID].location.split('@');
+   			var lect=myCalendar[ID]["lecturer"];
+   			var group=myCalendar[ID]["group"];
+   			var contentmodify=myCalendar[ID]["description"]
 
-   			var titleparse=myCalendar[i].ID.split('');
+   			var titleparse=myCalendar[ID].ID.split('');
    			if(titleparse[0]==="C"){
    				var optionsmodify='';
-		    	optionsmodify='<h3>Summary</h3>     <input type="text" name="title" id="title" value="'+myCalendar[i]["summary"]+'"/><br><br>';
+		    	optionsmodify='<h3>Summary</h3>     <input type="text" name="title" id="title" value="'+myCalendar[ID]["summary"]+'"/><br><br>';
 		    	optionsmodify+='<h3>Lecturer</h3>     <select name="lecturermodify" id="lecturermodify"></select><br><br>';
 		    	optionsmodify+='<h3>Start</h3><select name="start" id="startYearModify"></select><select name="start" id="startMonthModify"></select><select name="start" id="startDayModify"></select>-<select name="start" id="startHourModify"></select>h<select name="start" id="startMinModify"></select><br>'
 		    	optionsmodify+='<h3>End</h3><select name="end" id="endYearModify"></select><select name="end" id="endMonthModify"></select><select name="end" id="endDayModify"></select>-<select name="end" id="endHourModify"></select>h<select name="end" id="endMinModify"></select><br>'
@@ -1612,7 +1645,7 @@ function createCalendarEvent(){
 		    }
    			if(titleparse[0]==="E"){
    				var optionsmodify='';
-		    	optionsmodify='<h3>Summary</h3>     <input type="text" name="title" id="title" value="'+myCalendar[i]["summary"]+'"/><br><br>';
+		    	optionsmodify='<h3>Summary</h3>     <input type="text" name="title" id="title" value="'+myCalendar[ID]["summary"]+'"/><br><br>';
 		    	optionsmodify+='<h3>Lecturer</h3><input type="text" name="lecturer" id="lecturerevent" required/><br><br>';
 		    	optionsmodify+='<h3>Start</h3><select name="start" id="startYearModify"></select><select name="start" id="startMonthModify"></select><select name="start" id="startDayModify"></select>-<select name="start" id="startHourModify"></select>h<select name="start" id="startMinModify"></select><br>'
 		    	optionsmodify+='<h3>End</h3><select name="end" id="endYearModify"></select><select name="end" id="endMonthModify"></select><select name="end" id="endDayModify"></select>-<select name="end" id="endHourModify"></select>h<select name="end" id="endMinModify"></select><br>'

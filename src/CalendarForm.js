@@ -176,10 +176,39 @@ function updateCalendarDisplay() {
 	var listmodify='';
 	var listdelete='';
 	for(var n in myCalendar){
+		var years= myCalendar[n]["date_start"].substring(0,4);
+		var months= myCalendar[n]["date_start"].substring(4,6);
+		var days=myCalendar[n]["date_start"].substring(6,8);
+		if (myCalendar[n]["date_start"].length>8)
+		{
+			var hours=" "+myCalendar[n]["date_start"].substring(9,11)+"h";
+			var mins=myCalendar[n]["date_start"].substring(11,13)+" ";
+		}
+		else
+		{
+			var hours='';
+			var mins='';
+		}
+		var datestart=years+"/"+months+"/"+days+hours+mins; 
 
-		listmodify+='<input type="radio" name="titlecalmod" id="'+myCalendar[n]["comment"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'" class="titlecalmod"/> <label for="'+myCalendar[n]["comment"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'">'+myCalendar[n]["comment"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'</label><br />'; 
-		listdelete+='<input type="radio" name="titlecaldel" id="'+myCalendar[n]["comment"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'" class="titlecaldel"/> <label for="'+myCalendar[n]["comment"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'">'+myCalendar[n]["comment"]+'-'+myCalendar[n]["date_start"]+'-'+myCalendar[n]["date_end"]+'</label><br />'; 
+		var yeare = myCalendar[n]["date_end"].substring(0,4);
+		var monthe= myCalendar[n]["date_end"].substring(4,6);
+		var daye=myCalendar[n]["date_end"].substring(6,8);
+		if (myCalendar[n]["date_end"].length>8)
+		{
+			var houre=" "+myCalendar[n]["date_end"].substring(9,11)+"h";
+			var mine=myCalendar[n]["date_end"].substring(11,13)+" ";
+		}
+		else
+		{
+			var houre='';
+			var mine='';
+		}
+		var dateend=yeare+"/"+monthe+"/"+daye+houre+mine; 
+		listmodify+='<input type="radio" name="titlecalmod" id="'+myCalendar[n]["ID"]+'" class="titlecalmod"/> <label for="'+myCalendar[n]["comment"]+'-'+datestart+'-'+dateend+'">'+myCalendar[n]["comment"]+' : '+datestart+' to '+dateend+'</label><br />'; 
+		listdelete+='<input type="radio" name="titlecaldel" id="'+myCalendar[n]["ID"]+'" class="titlecaldel"/> <label for="'+myCalendar[n]["comment"]+'-'+datestart+'-'+dateend+'">'+myCalendar[n]["comment"]+' : '+datestart+' to '+dateend+'</label><br />'; 
 	}
+
 	document.getElementById("listForModifycal").innerHTML=listmodify;
 	document.getElementById("listForDeletioncal").innerHTML=listdelete;
 }
@@ -447,12 +476,15 @@ function createCalendarEvent(){
 
    function deleteCalendar(){
    	var nbtitles = document.getElementsByClassName("titlecaldel");
+   	console.log(myCalendar);
    	for (var i = 0; i< nbtitles.length; i++)
    	{
    		if (nbtitles[i].checked)
    		{
-   			myCalendar.splice(i,1);
+   			var ID=nbtitles[i]["id"];
+   			delete myCalendar[ID];
    		}
    	}
+   	console.log(myCalendar);
    	getCalendarJSON();
    }
