@@ -85,13 +85,13 @@ http.createServer(function(req, res) {
 
     else if(uri=='/createcourse'){
         if (req.method === 'POST') {
-            var body = '';
-            req.on('data', function (data) {
-            body += data;
-            });
-            req.on('end', function () {
-            parsedBody = qs.parse(body);
-            console.log(parsedBody);
+            // var body = '';
+            // req.on('data', function (data) {
+            // body += data;
+            // });
+            // req.on('end', function () {
+            // parsedBody = qs.parse(body);
+            // // console.log(parsedBody);
             // var newCourse={};
             // var sem=parsedBody.semester;
             // if (sem===7 || sem===8){
@@ -111,22 +111,25 @@ http.createServer(function(req, res) {
             // var creadate = cyear+cmonth+cday+"T"+chour+cmin+csec;
             // var summary=parsedBody.uesemester;
             // var ue= summary.split("-"); //séparation pour obtenir l'ID et l'acronyme de l'UE 
-            // var acronym=course_data[ue[0]].acronym; //récupération de l'acronyme pour le titre
-            // newCourse.comment=acronym;
-            // var stu= course_data[ue[0]].students; //sauvegarde de l'ID puis recherche des étudiants pour cette UE
-            // var stusplit = stu.split(","); //séparation des différents groupes
-            // var parc=[];
-            // for (var i in stusplit){
-            //     var parca = stusplit[i].split("["); 
-            //     parc.push(parca[0]); //récupération des noms de groupes seuls
-            // }   
-            // sumsum="F" //passage de la valeur en hexadecimal
-            // newCourse.id = "C"+year+sumsum+creadate+"@"+author;
-            // newCourse.summary=summary
-            // console.log(newCourse);
+            // // var acronym=parsedBody.uesemester.dataset.acronym;
+            // var uetot=
+            // console.log(uetot); //récupération de l'acronyme pour le titre
+            // // newCourse.comment=acronym;
+            // //var stu= course_data[ue[0]].students; //sauvegarde de l'ID puis recherche des étudiants pour cette UE
+            // // var stusplit = stu.split(","); //séparation des différents groupes
+            // // var parc=[];
+            // // for (var i in stusplit){
+            // //     var parca = stusplit[i].split("["); 
+            // //     parc.push(parca[0]); //récupération des noms de groupes seuls
+            // // }   
+            // // sumsum="F" //passage de la valeur en hexadecimal
+            // // newCourse.id = "C"+year+sumsum+creadate+"@"+author;
+            // // newCourse.summary=summary
+            // // console.log(newCourse);
 
 
-            });
+            // });
+        console.log(newCourse);
         }
         else{
             console.log("Rien");

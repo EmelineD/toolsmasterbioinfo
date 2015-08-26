@@ -1145,22 +1145,22 @@ function initCalendar() {
 			}
 			if (sem == 7){
 				listUE7.push(ue);
-				listidUE7.push(ue);
+				listidUE7.push(idue);
 				listUE7.sort();
 			}
 			else if(sem == 8){
 				listUE8.push(ue);
-				listidUE8.push(ue);
+				listidUE8.push(idue);
 				listUE8.sort();
 			}
 			else if(sem == 9){
 				listUE9.push(ue);
-				listidUE9.push(ue);
+				listidUE9.push(idue);
 				listUE9.sort();
 			}
 			else if(sem == 10){
 				listUE10.push(ue);
-				listidUE10.push(ue);
+				listidUE10.push(idue);
 				listUE10.sort();
 			}	
 		}		
@@ -1352,7 +1352,8 @@ function selectUE(){
 	var html ='<h3>UE</h3>     <select name="uesemester" id="uesemester"">';
 	for (var m=0;m<listUE.length;m++){
 		var ue = listidUE[m];
-		html += '<option value="'+listUE[m]+'" data-acronym="'+myCalendar[ue]["acronym"]+'" >'+listUE[m]+'</option>';
+		html += '<option value="'+listUE[m]+'"data-acronym="'+course_data[ue]["acronym"]+'" >'+listUE[m]+'</option>';
+		
 	}
 	html += '</select>';
 	document.getElementById("ue").innerHTML = html;
@@ -1386,29 +1387,30 @@ function selectRoomEvent(){
 
 function createCalendarCourse(){
 
+	// e.preventDefault();
 	var newCourse={};
 
 	//création de l'ID
-		//extraction de l'année (M1 ou M2) via le semestre
-		var sem=document.getElementById("semester").value;
-		if (sem===7 || sem===8){
-			var year=1;
-		}
-		else{
-			var year=2;
-		}
-		//extraction de l'auteur de la news (à changer par utilisateur GitHub)
-		var author=document.getElementById("author").value;
-		//extraction de la date de création
-		var datecrea = new Date();
-		var cday = ("0" + (datecrea.getDate())).slice(-2);
-		var cmonth = ("0" + (datecrea.getMonth()+1)).slice(-2);
-		var cyear = datecrea.getFullYear().toString();
-		var chour = ("0" + (datecrea.getHours())).slice(-2);
-		var cmin = ("0" + (datecrea.getMinutes())).slice(-2);
-		var csec = ("0" + (datecrea.getSeconds())).slice(-2);
-		var creadate = cyear+cmonth+cday+"T"+chour+cmin+csec;
-		//extraction de la somme des valeurs des parcours ayant ce cours
+	//extraction de l'année (M1 ou M2) via le semestre
+	var sem=document.getElementById("semester").value;
+	if (sem===7 || sem===8){
+		var year=1;
+	}
+	else{
+		var year=2;
+	}
+	//extraction de l'auteur de la news (à changer par utilisateur GitHub)
+	var author=document.getElementById("author").value;
+	//extraction de la date de création
+	var datecrea = new Date();
+	var cday = ("0" + (datecrea.getDate())).slice(-2);
+	var cmonth = ("0" + (datecrea.getMonth()+1)).slice(-2);
+	var cyear = datecrea.getFullYear().toString();
+	var chour = ("0" + (datecrea.getHours())).slice(-2);
+	var cmin = ("0" + (datecrea.getMinutes())).slice(-2);
+	var csec = ("0" + (datecrea.getSeconds())).slice(-2);
+	var creadate = cyear+cmonth+cday+"T"+chour+cmin+csec;
+	//extraction de la somme des valeurs des parcours ayant ce cours
 	var summary=document.getElementById("uesemester").value; //extraction de l'UE entière
 	var ue= summary.split("-"); //séparation pour obtenir l'ID et l'acronyme de l'UE 
 	var acronym=course_data[ue[0]].acronym; //récupération de l'acronyme pour le titre
@@ -1476,14 +1478,19 @@ function createCalendarCourse(){
 	//extraction de la description du cours
 	newCourse.description=document.getElementById("content").value;
 
-	console.log(newCourse);
-
-
 
 	//passage de l'objet js en JSON
-	// JSON.stringify(newCourse);
+	newCourse=JSON.stringify(newCourse);
 
-}
+	var xhr = new XMLHttpRequest();
+  	xhr.open(form.name.method, form.name.action, true);
+  	xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+
+ 	 // send the collected data as JSON
+  	xhr.send(newCourse);
+  	xhr.onloadend = function () {
+	}
+};
 
 function createCalendarEvent(){
 

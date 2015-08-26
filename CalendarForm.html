@@ -32,7 +32,7 @@
 			</ul>
 			<div id="course" name="course">
 				<h2>Creation of a course</h2><br>
-				<form action="/createcourse" method="POST">
+				<form action="/createcourse" method="POST" name="formcourse">
 				<h3>Author</h3><input type="text" name="author" id="author" required/><br><br>
 				<h3>Semester</h3>     <select name="semester" id="semester" onChange="selectUE()"><option value="none" selected></option><option value="7">S7</option><option value="8">S8</option><option value="9">S9</option><option value="10">S10</option></select>
 				<span id="ue"></span>
@@ -47,7 +47,8 @@
 				<span id="students"><h3>Students</h3><select name="groups" id="groups"></select></span><br><br><br>
 				<h3>Notes</h3><textarea name="notes" id="content" rows="10" cols="50" required></textarea>
 				<!-- <input type="submit"  onclick="createCalendarCourse()" value="Create" /> -->
-				<input type="submit" onclick=createCalendarCourse() value="Create" /></form>
+				<input type="submit" onsubmit=createCalendarCourse(e) value="Create" />
+			</form>
 			</div>
 
 
