@@ -22,15 +22,15 @@ function initCalendar() {
 	for (var c in course_data){
 		if (course_data[c].visibility==="visible"){
 			acro=course_data[c].acronym;
-			idue=course_data[c].id
-			ue=idue+"-"+acro
+			idue=course_data[c].id;
+			ue=idue+"-"+acro;
 			if (course_data[c].link){
 				var link=course_data[c].link;
-				sem=course_data[link].semester
+				sem=course_data[link].semester;
 				ue=idue;
 			}
 			else{
-				sem=course_data[c].semester
+				sem=course_data[c].semester;
 			}
 			if (sem == 7){
 				listUE7.push(ue);
@@ -58,7 +58,7 @@ function initCalendar() {
 	var lectselect='';
 	for (var lec in lecturers){
 		var namelec= lecturers[lec].name;
-		listlect.push(namelec)
+		listlect.push(namelec);
 	}
 	listlect.sort();
 	for (var llec in listlect){
@@ -72,7 +72,7 @@ function initCalendar() {
 	var dayselect;
 	var hourselect;
 	var minselect;
-	var year=[2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025,2026,2027,2028,2029,2030]
+	var year=[2015,2016,2017,2018,2019,2020,2021,2022,2023,2024,2025,2026,2027,2028,2029,2030];
 	for (var y=0;y<year.length;y++){
 		yearselect+='<option value="'+year[y]+'">'+year[y]+'</option>';
 	}
@@ -81,15 +81,15 @@ function initCalendar() {
 	for (var mo=0;mo<month.length;mo++){
 		monthselect+='<option value="'+month[mo]+'">'+month[mo]+'</option>';
 	}
-	var day=["01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31"]
+	var day=["01","02","03","04","05","06","07","08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31"];
 	for (var d=0;d<day.length;d++){
 		dayselect+='<option value="'+day[d]+'">'+day[d]+'</option>';
 	}
-	var hour=["00","08","09","10","11","12","13","14","15","16","17","18","19"]
+	var hour=["00","08","09","10","11","12","13","14","15","16","17","18","19"];
 	for (var h=0;h<hour.length;h++){
 		hourselect+='<option value="'+hour[h]+'">'+hour[h]+'</option>';
 	}
-	var minute=["00","15","30","45"]
+	var minute=["00","15","30","45"];
 	for (var min=0;min<minute.length;min++){
 		minselect+='<option value="'+minute[min]+'">'+minute[min]+'</option>';
 	}
@@ -255,7 +255,7 @@ function selectRoom(){
 			var html=' ';
 		}
 		else{
-			var html='<h3>Room</h3>     <input type="text" name="room" id="room" required/>';;
+			var html='<h3>Room</h3>     <input type="text" name="room" id="room" required/>';
 		}
 		document.getElementById("rooms").innerHTML=html;
 	}
@@ -268,7 +268,7 @@ function selectRoomEvent(){
 			var html=' ';
 		}
 		else{
-			var html='<h3>Room</h3>     <input type="text" name="roomevent" id="roomevent" required/>';;
+			var html='<h3>Room</h3>     <input type="text" name="roomevent" id="roomevent" required/>';
 		}
 		document.getElementById("roomsevent").innerHTML=html;
 	}
@@ -276,7 +276,6 @@ function selectRoomEvent(){
 
 function createCalendarCourse(){
 
-	// e.preventDefault();
 	var newCourse={};
 
 	//création de l'ID
@@ -321,7 +320,7 @@ function createCalendarCourse(){
 	// }
 		//ajout dans l'objet de l'ID et du summary
 		newCourse.id = "C"+year+sumsum+creadate+"@"+author;
-		newCourse.summary=summary
+		newCourse.summary=summary;
 
 	//extraction de la date de début et de la date de fin du cours
 	var yearstart=document.getElementById("startYear").value;
@@ -369,15 +368,15 @@ function createCalendarCourse(){
 
 
 	//passage de l'objet js en JSON
-	newCourse=JSON.stringify(newCourse);
 
 	var xhr = new XMLHttpRequest();
-  	xhr.open(form.name.method, form.name.action, true);
+  	xhr.open("POST", "/createcourse", true);
   	xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 
  	 // send the collected data as JSON
-  	xhr.send(newCourse);
-  	xhr.onloadend = function () {
+  	xhr.send(JSON.stringify(newCourse));
+  	xhr.onreadystatechange = function () {
+  		console.log("End")
 	}
 };
 
@@ -486,9 +485,15 @@ function createCalendarEvent(){
    		newEvent.comment=document.getElementById("summaryevent").value;
    	}
 
-   	console.log(newEvent);
+   	var xhr = new XMLHttpRequest();
+  	xhr.open("POST", "/createevent", true);
+  	xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 
-   	JSON.stringify(newEvent);
+ 	 // send the collected data as JSON
+  	xhr.send(JSON.stringify(newEvent));
+  	xhr.onreadystatechange = function () {
+  		console.log("End")
+	}
    }
 
 

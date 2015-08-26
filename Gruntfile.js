@@ -11,6 +11,19 @@ module.exports = function(grunt) {
         dest: 'js/<%= pkg.name %>.js'
       }
     },
+   jshint: {
+      files: ['Gruntfile.js', 'src/*.js'],
+      options: {
+        globals: {
+          jQuery: false
+        }
+      }
+    },
+    watch: {
+      files: ['<%= jshint.files %>'],
+      tasks: ['jshint']
+    },
+
     uglify: {
       options: {
         banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n'
@@ -20,12 +33,14 @@ module.exports = function(grunt) {
           'js/<%= pkg.name %>.min.js': ['<%= concat.dist.dest %>']
         }
       }
-    },
-
-  });
+    }
+   });
 
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-contrib-jshint');
+  grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.registerTask('default', ['jshint']);
 
 //  grunt.registerTask('default', ['jshint', 'qunit', 'concat', 'uglify']);
     grunt.registerTask('default', ['concat', 'uglify']);
