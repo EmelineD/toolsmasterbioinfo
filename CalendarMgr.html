@@ -21,13 +21,17 @@
         <br><br>
         <h1>Administration of the calendar</h1>
 
+        <div id="connect" name="connect">
+        </div>
+
         <div id="auth" name="auth">
+<!--             <form onsubmit="ghlogin()"> -->
             <form action="/login" method="POST">
-                <label>Github login</label>
+<!--                 <label>Github login</label>
                 <input type="text" name="githublog" id="githubblog"/><br><br>
                 <label>Password</label>
-                <input type="password" name="githubpass" id="githubpass"/><br><br>
-                <input type="submit" value="Sign in" />
+                <input type="password" name="githubpass" id="githubpass"/><br><br> -->
+                <input type="submit" value="Github Sign in" />
             </form>
         </div>
 
@@ -39,7 +43,9 @@
             </ul>
             <div id="course" name="course">
                 <h2>Creation of a course</h2><br>
-                <form onsubmit="createCalendarCourse()" method="POST">
+                    <div id="authorgit">
+                        <input type="text" name="author" id="author" required/>
+                    </div>
                     <div id="mat">
                         <label>Semester</label>     
                             <select name="semester" id="semester" onChange="selectUE()">
@@ -81,12 +87,11 @@
                         <label>Students</label>
                         <select name="groups" id="groups"></select>
                     </div>
-                    <div id"description">
+                    <div id="description">
                     <label>Notes</label>
                         <textarea name="notes" id="content" rows="10" cols="50"></textarea>
-                    <input type="submit" value="Create" />
+                    <input type="submit" onclick="createCalendarCourse()" value="Create" />
                      </div>
-                </form>
             </div>
 
 

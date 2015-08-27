@@ -18,6 +18,9 @@ var client=null;
 var ghrepo =null;
 var state;
 
+var everyauth = require('everyauth')
+  , connect = require('connect');
+
 http.createServer(function(req, res) {
     var uri = url.parse(req.url).pathname;
     var sha;
@@ -29,27 +32,42 @@ http.createServer(function(req, res) {
         req.on('end', function () {
         parsedBody = qs.parse(body);
 
-        // sessionStorage.setItem("login",parsedBody.githublog);
-        // sessionStorage.setItem("password",parsedBody.githubpass);           
 
-        var auth_url = github.auth.config({
-            id: '2254bfe8fe6989830488',
-            secret: '36d6eb32c47ba1dc9e0331397d7a165769730f2c'
-            }).login(['user', 'repo']);
-        // console.log(auth_url);
-            state = auth_url.match(/&state=([0-9a-z]{32})/i);
+    //     var auth_url = github.auth.config({
+    //         id: '2254bfe8fe6989830488',
+    //         secret: '36d6eb32c47ba1dc9e0331397d7a165769730f2c'
+    //         }).login(['repo']);
+    // //    console.log(auth_url);
+    //     state = auth_url.match(/&state=([0-9a-z]{32})/i);
 
-            res.writeHead(302, {'Content-Type': 'text/plain', 'Location': auth_url})
+    //     client = github.client();
+    //     // console.log(client);
+
+
+        everyauth.github
+          .appId('YOUR CLIENT ID HERE')
+          .appSecret('YOUR CLIENT SECRET HERE')
+          .findOrCreateUser( function (session, accessToken, accessTokenExtra, githubUserMetadata) {
+            // find or create user logic goes here
+          })
+          .redirectPath('/');
+
+            res.writeHead(302, {'Content-Type': 'text/plain', 'Location': auth_url, 'Access-Control-Allow-Credentials': true  })
             res.end('Redirecting to ' + auth_url);
         });
     }
     // Callback url from github login
     else if (uri=='/auth/callback') {
-        console.log("Auth");
+        github.auth.login(qs.parse(uri.query).code,function(err,token){
+            res.writeHead(200, {'Content-Type': 'text/plain'});
+            console.log(token);
+            res.end(token);
+        });
         var values = qs.parse(uri.query);
         // Check against CSRF attacks
         if (!state || state[1] != values.state) {
-          res.writeHead(301, {Location: '/CalendarMgr.html?status=1'});
+
+          res.writeHead(301, {Location: '/CalendarMgr.html?status=1', 'Access-Control-Allow-Credentials': true });
           res.end('');
         } 
         else {
@@ -62,60 +80,21 @@ http.createServer(function(req, res) {
 
     else if(uri=='/createcourse'){
         if (req.method === 'POST') {
-            // var body = '';
-            // req.on('data', function (data) {
-            // body += data;
-            // });
-            // req.on('end', function () {
-            // parsedBody = qs.parse(body);
-            // // console.log(parsedBody);
-            // var newCourse={};
-            // var sem=parsedBody.semester;
-            // if (sem===7 || sem===8){
-            //     var year=1;
-            // }
-            // else{
-            //     var year=2;
-            // }
-            // var author=parsedBody.author
-            // var datecrea = new Date();
-            // var cday = ("0" + (datecrea.getDate())).slice(-2);
-            // var cmonth = ("0" + (datecrea.getMonth()+1)).slice(-2);
-            // var cyear = datecrea.getFullYear().toString();
-            // var chour = ("0" + (datecrea.getHours())).slice(-2);
-            // var cmin = ("0" + (datecrea.getMinutes())).slice(-2);
-            // var csec = ("0" + (datecrea.getSeconds())).slice(-2);
-            // var creadate = cyear+cmonth+cday+"T"+chour+cmin+csec;
-            // var summary=parsedBody.uesemester;
-            // var ue= summary.split("-"); //séparation pour obtenir l'ID et l'acronyme de l'UE 
-            // // var acronym=parsedBody.uesemester.dataset.acronym;
-            // var uetot=
-            // console.log(uetot); //récupération de l'acronyme pour le titre
-            // // newCourse.comment=acronym;
-            // //var stu= course_data[ue[0]].students; //sauvegarde de l'ID puis recherche des étudiants pour cette UE
-            // // var stusplit = stu.split(","); //séparation des différents groupes
-            // // var parc=[];
-            // // for (var i in stusplit){
-            // //     var parca = stusplit[i].split("["); 
-            // //     parc.push(parca[0]); //récupération des noms de groupes seuls
-            // // }   
-            // // sumsum="F" //passage de la valeur en hexadecimal
-            // // newCourse.id = "C"+year+sumsum+creadate+"@"+author;
-            // // newCourse.summary=summary
-            // // console.log(newCourse);
 
-
-            // });
         var body='';
+        var post='';
 
         req.on('data', function(data){
             body+=data
         });
 
+        console.log(body);
+
         req.on('end', function(){
-            var post=qs.parse(body);
+            req.post=qs.parse(body);
+            
         });
-    
+
         }
         else{
             console.log("Rien");

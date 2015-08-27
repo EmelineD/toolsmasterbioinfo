@@ -162,13 +162,32 @@ function initCalendar() {
 }
 
 function initStatus(){
-	console.log("Connect");
-	window.location.search.substr(1).split("&").forEach(function ( v,i,arr) {tmp=v.split("=");print(tmp);});
+	window.location.search.substr(1).split("&").forEach(function ( v,i,arr) {
+		tmp=v.split("=");
+	if(tmp[0]==="status" && tmp[1]==="1"){
+		updatePage(1);
+		}
+	});
+}
+
+function updatePage(stat){
+	if(stat===1)
+	{
+		document.getElementById("auth").style.visibility="hidden";
+		var githubauth='Vous êtes connecté à Github';
+		document.getElementById("connect").style.visibility="visible";
+		document.getElementById("connect").innerHTML=githubauth;
+	}
+	else
+	{
+		document.getElementById("auth").style.visibility="visible";
+		document.getElementById("connect").style.visibility="hidden";
+	}
 }
 
 function getCalendarJSON(){
 	var xhr = new XMLHttpRequest();
-
+	
 	xhr.onreadystatechange = function() {
 		if (xhr.readyState == 4 && (xhr.status == 200 || xhr.status == 0)) {
         	myCalendar = JSON.parse(xhr.responseText); // Données textuelles récupérées
@@ -290,6 +309,9 @@ function createCalendarCourse(){
 
 	var newCourse={};
 
+		console.log("new event "+newCourse);
+
+
 	//création de l'ID
 	//extraction de l'année (M1 ou M2) via le semestre
 	var sem=document.getElementById("semester").value;
@@ -390,7 +412,6 @@ function createCalendarCourse(){
  	 // send the collected data as JSON
   	xhr.send(JSON.stringify(newCourse));
   	xhr.onreadystatechange = function () {
-  		console.log("End")
 	}
 };
 
