@@ -19,11 +19,6 @@ module.exports = function(grunt) {
         }
       }
     },
-    watch: {
-      files: ['<%= jshint.files %>'],
-      tasks: ['jshint']
-    },
-
     uglify: {
       options: {
         banner: '/*! <%= pkg.name %> <%= grunt.template.today("dd-mm-yyyy") %> */\n'

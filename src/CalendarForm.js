@@ -13,8 +13,9 @@ var listbat = [];
 var listbatmodify = [];
 var myCalendar;
 
-
 function initCalendar() {
+
+	initStatus();
 	//création des listes de cours
 	var sem;
 	var acro;
@@ -160,6 +161,11 @@ function initCalendar() {
 	getCalendarJSON();
 }
 
+function initStatus(){
+	console.log("Connect");
+	window.location.search.substr(1).split("&").forEach(function ( v,i,arr) {tmp=v.split("=");print(tmp);});
+}
+
 function getCalendarJSON(){
 	var xhr = new XMLHttpRequest();
 
@@ -209,12 +215,11 @@ function updateCalendarDisplay() {
 			var mine='';
 		}
 		var dateend=yeare+"/"+monthe+"/"+daye+houre+mine; 
-		listmodify+='<input type="radio" name="titlecalmod" id="'+myCalendar[n]["ID"]+'" class="titlecalmod"/> <label for="'+myCalendar[n]["comment"]+'-'+datestart+'-'+dateend+'">'+myCalendar[n]["comment"]+' : '+datestart+' to '+dateend+'</label><br />'; 
-		listdelete+='<input type="radio" name="titlecaldel" id="'+myCalendar[n]["ID"]+'" class="titlecaldel"/> <label for="'+myCalendar[n]["comment"]+'-'+datestart+'-'+dateend+'">'+myCalendar[n]["comment"]+' : '+datestart+' to '+dateend+'</label><br />'; 
-	}
-
+		listmodify+='<input type="radio" name="titlecalmod" id="'+myCalendar[n]["ID"]+'" class="titlecalmod"/>'+myCalendar[n]["comment"]+'-'+datestart+'-'+dateend+'<br />'; 
+		listdelete+='<input type="radio" name="titlecalmod" id="'+myCalendar[n]["ID"]+'" class="titlecalmod"/>'+myCalendar[n]["comment"]+'-'+datestart+'-'+dateend+'<br />'; 	
 	document.getElementById("listForModifycal").innerHTML=listmodify;
 	document.getElementById("listForDeletioncal").innerHTML=listdelete;
+	}
 }
 
 function selectUE(){
@@ -245,6 +250,13 @@ function selectUE(){
 		
 	}
 	html += '</select>';
+	html += '<select name="typecourse" id="typecourse">';
+	html += '<option value="Cours/TD" selected>Cours/TD</option>'
+	html += '<option value="Cours">Cours</option>';
+	html += '<option value="TD">TD</option>';
+    html += '<option value="TP">TP</option>';
+    html += '<option value="Examen">Examen</option>'
+    html += '</select>';
 	document.getElementById("ue").innerHTML = html;
 }
 
@@ -287,6 +299,7 @@ function createCalendarCourse(){
 	else{
 		var year=2;
 	}
+	newCourse.type=document.getElementById("typecourse").value;
 	//extraction de l'auteur de la news (à changer par utilisateur GitHub)
 	var author=document.getElementById("author").value;
 	//extraction de la date de création
@@ -366,6 +379,7 @@ function createCalendarCourse(){
 	//extraction de la description du cours
 	newCourse.description=document.getElementById("content").value;
 
+	console.log(newCourse);
 
 	//passage de l'objet js en JSON
 
@@ -498,7 +512,7 @@ function createCalendarEvent(){
 
 
 
-   function deleteCalendar(){
+function deleteCalendar(){
    	var nbtitles = document.getElementsByClassName("titlecaldel");
    	console.log(myCalendar);
    	for (var i = 0; i< nbtitles.length; i++)
@@ -511,4 +525,4 @@ function createCalendarEvent(){
    	}
    	console.log(myCalendar);
    	getCalendarJSON();
-   }
+}

@@ -1,11 +1,13 @@
+var github = require('octonode');
+var qs = require('querystring');
+var client=null;
+var ghrepo =null;
+
 var http = require('http'),
     url = require('url'),
     path = require('path'),
     fs = require('fs'),
-    qs = require('qs'),
-    github = require('octonode'),
-    qs = require('querystring');
-
+    qs = require('qs');
 var mimeTypes = {
     "html": "text/html",
     "jpeg": "image/jpeg",
@@ -14,49 +16,76 @@ var mimeTypes = {
     "js": "text/javascript",
     "css": "text/css"};
 
-var client=null;
-var ghrepo =null;
-var state;
-
 http.createServer(function(req, res) {
     var uri = url.parse(req.url).pathname;
+    console.log(uri);
     var sha;
     if (uri=='/login') {
         var body = '';
         req.on('data', function (data) {
-            body += data;
+        body += data;
         });
         req.on('end', function () {
         parsedBody = qs.parse(body);
 
-        // sessionStorage.setItem("login",parsedBody.githublog);
-        // sessionStorage.setItem("password",parsedBody.githubpass);           
-
         var auth_url = github.auth.config({
-            id: '2254bfe8fe6989830488',
-            secret: '36d6eb32c47ba1dc9e0331397d7a165769730f2c'
+            id: "EmelineD",
+            secret: "lespaces33"
             }).login(['user', 'repo']);
         // console.log(auth_url);
-            state = auth_url.match(/&state=([0-9a-z]{32})/i);
+            var state = auth_url.match(/&state=([0-9a-z]{32})/i);
+            var values = qs.parse(uri.query);
+            console.log(values)
+            if (!state || state[1] != values.state) {
+                client = github.client({
+                    username: parsedBody.githublog,
+                    password: parsedBody.githubpass
+                });
+                client.get('/user', {}, function (err, status, body, headers) {
+  // console.log(body); //json object
+                 });
+                ghrepo= client.repo('master-bioinfo-bordeaux/master-bioinfo-bordeaux.github.io');
 
-            res.writeHead(302, {'Content-Type': 'text/plain', 'Location': auth_url})
-            res.end('Redirecting to ' + auth_url);
+                res.writeHead(403, {'Content-Type': 'text/plain'});
+                 res.end('Faux');
+            }
+            else{
+                res.writeHead(403, {'Content-Type': 'text/plain'});
+                res.end('Vrai');
+        }
         });
     }
     // Callback url from github login
-    else if (uri=='/auth/callback') {
-        console.log("Auth");
+    else if (uri=='/auth') {
         var values = qs.parse(uri.query);
-        // Check against CSRF attacks
+    // Check against CSRF attacks
         if (!state || state[1] != values.state) {
-          res.writeHead(301, {Location: '/CalendarMgr.html?status=1'});
-          res.end('');
-        } 
+            res.writeHead(403, {'Content-Type': 'text/plain'});
+            var newCourse={};
+            var ID="C2F20150825T085836@EmelineD";
+            newCourse[ID]={};
+            newCourse[ID].ID="C2F20150825T085836@EmelineD";
+            newCourse[ID].summary="B1BS7M06-Anglais";
+            newCourse[ID].date_start="20150825T0000";
+            newCourse[ID].date_end="20150825T0000";
+            newCourse[ID].group="All";
+            newCourse[ID].lecturer="Beurton-Aimar M";
+            newCourse[ID].location="AmphiA5::Carreire";
+            newCourse[ID].description="Essai";
+            newCourse[ID].comment="AEB-Stats";
+            newCourse=JSON.stringify(newCourse,'',4);
+            ghrepo.contents('data/test.json', function(err, data, headers) {
+                setSHA(data.sha);
+                ghrepo.updateContents('data/test.json', 'Essai de modif de JSON', newCourse, sha, function(err, data, headers) {
+                res.end("error: " + err)
+                });
+            });
+        }
         else {
-          github.auth.login(values.code, function (err, token) {
+            github.auth.login(values.code, function (err, token) {
             res.writeHead(200, {'Content-Type': 'text/plain'});
             res.end(token);
-          });
+            });
         }
     }
 
@@ -143,4 +172,4 @@ http.createServer(function(req, res) {
     function setSHA(a_sha) {
         sha = a_sha;
     }
-}).listen(8080);
+}).listen(8000);

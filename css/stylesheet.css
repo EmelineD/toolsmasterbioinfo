@@ -27,6 +27,11 @@ div{
   padding:35px 0px;
 }
 
+/*css du second div cible le deuxième li de chaque ul*/
+div + div{ 
+  padding:5px 0px;
+}
+
 /*css de la barre de navigation*/
 nav {
   -moz-border-radius: 0px 0px 0px 8px;
