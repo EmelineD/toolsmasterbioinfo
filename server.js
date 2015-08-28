@@ -26,9 +26,6 @@ passport.deserializeUser(function(obj, done) {
   done(null, obj);
 });
 
-var GITHUB_CLIENT_ID = '2254bfe8fe6989830488';
-var GITHUB_CLIENT_SECRET = '36d6eb32c47ba1dc9e0331397d7a165769730f2c';
-var GITHUB_CALLBACK_URL = "http://127.0.0.1:8080/auth/github/callback";
  passport.use(new GitHubStrategy({
     clientID: GITHUB_CLIENT_ID,
     clientSecret: GITHUB_CLIENT_SECRET,
