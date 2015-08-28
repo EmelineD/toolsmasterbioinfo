@@ -12,7 +12,7 @@
   },
   "scripts": {
     "prestart": "npm install",
-    "start": "http-server -a local.host -p 8080 -i CalendarForm.html"
+    "start": "http-server -a localhost -p 8080 -i CalendarForm.html"
   },
   "dependencies": {
     "octonode": "~0.7.1",
@@ -25,6 +25,7 @@
     "connect": "~3.4.0",
     "passport-github2": "~0.1.9",
     "passport": "~0.3.0",
-    "express": "~4.13.3"
+    "express": "~4.13.3",
+    "ejs": "~2.3.3"
   }
 }

@@ -8,7 +8,8 @@ module.exports = function(grunt) {
       },
       dist: {
         src: ['../master-bioinfo-bordeaux.github.io/src/courses.js', 'src/NewsForm.js','src/CalendarForm.js','src/CalendarFormModify.js','src/locandlect.js'],
-        dest: 'js/<%= pkg.name %>.js'
+        // dest: 'js/<%= pkg.name %>.js',
+        dest: 'public/<%= pkg.name %>.js'
       }
     },
    jshint: {

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta name="Distribution" content="Global" />
+    <meta name="Author" content="Master Bioinformatique de Bordeaux" />
+    <title>Administration of Calendar</title>
+    <link rel="stylesheet" type="text/css" media="screen" href="/public/stylesheet.css"/>
+    <script type="text/javascript" src="/public/msbinobi_tools.js"></script>
+
+</head>
+<body onload="initCalendar()">
+    <nav>
+        <ul>
+            <li><a class = "button" href="#createcal">Create</a></li>
+            <li><a class = "button" href="#modifycal">Modify</a></li>
+            <li><a class = "button" href="#deletecal">Delete</a><li>
+        </ul>
+    </nav>
+
+        <br><br>
+        <h1>Administration of the calendar</h1>
+
+        <div id="connect" name="connect">
+        </div>
+
+        <div id="auth" name="auth">
+<!--             <form onsubmit="ghlogin()"> -->            
+            <form action="/login" method="POST">
+<!--                 <label>Github login</label>
+                <input type="text" name="githublog" id="githubblog"/><br><br>
+                <label>Password</label>
+                <input type="password" name="githubpass" id="githubpass"/><br><br> -->
+                <input type="submit" value="Github Sign in" />
+            </form>
+        </div>
+
+        <div id="createcal" name="createcal">
+            <h2>Creation for calendar</h2><br>
+            <ul id="navcreatecal">
+                <li><a class = "button" href="#course">Create a course</a></li>
+                <li><a class = "button" href="#event">Create an event</a></li>
+            </ul>
+            <div id="course" name="course">
+                <h2>Creation of a course</h2><br>
+                    <div id="authorgit">
+                        <label>Author</label>
+                            <input type="text" name="author" id="author" required/>
+                    </div>
+                    <div id="mat">
+                        <label>Semester</label>     
+                            <select name="semester" id="semester" onChange="selectUE()">
+                                <option value="none" selected></option>
+                                <option value="7">S7</option>
+                                <option value="8">S8</option>
+                                <option value="9">S9</option>
+                                <option value="10">S10</option>
+                            </select>
+                            <span id="ue"></span>
+
+                    </div>
+                    <div id="lecturers"><label>Lecturer</label>
+                        <select name="lecturer" id="lecturer">
+                        </select>
+                    </div>
+                    <div id="datecourse">
+                        <label>Start</label> <!-- chercher pour mettre date du jour-->
+                             <select name="start" id="startYear"></select>
+                            <select name="start" id="startMonth"></select>
+                            <select name="start" id="startDay"></select>-
+                            <select name="start" id="startHour"></select>h
+                            <select name="start" id="startMin"></select>
+                            <input type="radio" name="allday" value="allday" id="allday" />All day
+                            <br>
+                        <label>End</label>
+                            <select name="end" id="endYear"></select>
+                            <select name="end" id="endMonth"></select>
+                            <select name="end" id="endDay"></select>-
+                            <select name="end" id="endHour"></select>h
+                            <select name="end" id="endMin"></select>
+                    </div>
+                    <div id="locations">
+                        <label>Location</label>
+                            <select name="location" id="location" onChange="selectRoom()"></select>
+                            <span id="rooms"></span>
+                    </div>
+                    <div id="students">
+                        <label>Students</label>
+                        <select name="groups" id="groups"></select>
+                    </div>
+                    <div id="description">
+                    <label>Notes</label>
+                        <textarea name="notes" id="content" rows="10" cols="50"></textarea>
+                    <input type="submit" onclick="createCalendarCourse()" value="Create" />
+                     </div>
+            </div>
+
+
+            <div id="event" name="event">
+                <h2>Creation of an event</h2><br>
+                    <div id="author">
+                        <label>Author</label>
+                            <input type="text" name="authorgitevent" id="authorgitevent" required/>
+                    </div>
+                    <div id="resume">
+                        <label>Summary</label>
+                        <input type="text" name="summary" id="summaryevent" required/>
+                    </div>
+                    <div id="lect">  
+                        <label>Lecturer</label>
+                        <input type="text" name="lecturer" id="lecturerevent" required/>
+                    </div>
+                    <div id="dateevent">
+                    <label>Start</label>  <!-- chercher pour mettre date du jour -->
+                        <select name="start" id="startYearevent"></select>
+                        <select name="start" id="startMonthevent"></select>
+                        <select name="start" id="startDayevent"></select>-
+                        <select name="start" id="startHourevent"></select>h
+                        <select name="start" id="startMinevent"></select>
+                        <input type="radio" name="allday" value="allday" id="alldayevent" />All day
+                    <br>
+                    <label>End</label>
+                        <select name="end" id="endYearevent"></select>
+                        <select name="end" id="endMonthevent"></select>
+                        <select name="end" id="endDayevent"></select>-
+                        <select name="end" id="endHourevent"></select>h
+                        <select name="end" id="endMinevent"></select>*
+                    </div>
+                    <div id="locations">
+                        <label>Location</label>
+                        <select name="location" id="locationevent" onChange="selectRoomEvent()"></select>
+                        <span id="roomsevent"></span>
+                    </div>
+                    <div id="students">
+                        <label>Students</label>
+                        <select name="yearstudy" id="yearstudy">
+                            <option value="1">M1</option>
+                            <option value="2">M2</option>
+                            <option value="3">All</option>
+                        </select>
+                        <span id="parcours"></span>
+                    </div>
+                    <div id="obligation">
+                        <label>Obligation</label>
+                        <input type="radio" name="choice" value="required" id="choice" />Required 
+                        <input type="radio" name="choice" value="elective" id="choice" />Elective
+                    </div>
+                    <div id="description">
+                        <label>Notes</label>
+                        <textarea name="notes" id="contentevent" rows="10" cols="50" required></textarea>
+                    </div>
+                    <input type="submit"  onclick="createCalendarEvent()" value="Create" />
+                </form>
+            </div>
+        </div>
+
+        <div id="modifycal" name="modifycal">
+            <h2>Modification of the calendar</h2><br>
+            Select a course/event to modify     
+            <div id="listForModifycal">
+            </div>
+            <div id="CalendarforModify">
+                <input type="submit" onclick="modifyCalendar()" value="Modify" />
+            </div>
+            <div id="formModifyevent">
+            </div>
+         </div>
+
+        <div id="deletecal" name="deletecal">
+            <h2>Deletion in the calendar</h2><br>
+            Select a course/event to delete     
+            <div id="listForDeletioncal">
+            </div>
+            <div id="formDelete">
+                <input type="submit"  onclick="deleteCalendar()" value="Delete" />
+            </div>
+        </div>
+
+    </body>
+</html>
+
+

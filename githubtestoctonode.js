@@ -2,7 +2,6 @@ var http = require('http'),
     url = require('url'),
     path = require('path'),
     fs = require('fs'),
-    qs = require('qs'),
     github = require('octonode'),
     qs = require('querystring');
 

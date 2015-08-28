@@ -25,7 +25,6 @@ function initCalendar() {
 	initStatus();
 	//création des listes de cours
 
-	
 	var semcourse;
 	var acro;
 	var idue;
@@ -49,7 +48,6 @@ function initCalendar() {
 			})
 		}		
 	}	
-	console.log(listidUE);
 	//création de la liste des professeurs
 	var lectselect='';
 	for (var lec in lecturers){
@@ -237,31 +235,19 @@ function updateCalendarDisplay() {
 }
 
 function selectUE(){
-	var sem=document.getElementById('semester').value;
-	sem=parseInt(sem);
-	var listUE;
-	var listidUE;
+	var semc=document.getElementById('semester').value;
+	semc=parseInt(semc);
+	var listUEc,listisUEc;
 
-	if (sem == 7){
-		listUE=listUE7;
-		listidUE=listidUE7;
-	}
-	else if(sem == 8){
-		listUE=listUE8;
-		listidUE=listidUE8;
-	}
-	else if(sem == 9){
-		listUE=listUE9;
-		listidUE=listidUE9;
-	}
-	else if(sem == 10){
-		listUE=listUE10;
-		listidUE=listidUE10;
-	}
+	sem.forEach(function putCourseinSem(el,i,sem){
+		if (sem[i]==semc){
+			listUEc=listUE[i];
+			listidUEc=listidUE7[i];
+				}
+			})
 	var html ='<h3>UE</h3>     <select name="uesemester" id="uesemester"">';
-	for (var m=0;m<listUE.length;m++){
-		console.log(listUE[m])
-		html += '<option value="'+listUE[m]+'" data-acronym="'+listidUE[m]+'" >'+listUE[m]+'</option>';
+	for (var m=0;m<listUEc.length;m++){
+		html += '<option value="'+listUEc[m]+'" data-acronym="'+listidUEc[m]+'" >'+listUEc[m]+'</option>';
 		
 	}
 	html += '</select>';
@@ -305,8 +291,12 @@ function createCalendarCourse(){
 
 	var newCourse={};
 
-		console.log("new event "+newCourse);
+	var summary=document.getElementById("uesemester");
+	newCourse.comment=summary.options[summary.selectedIndex].getAttribute("data-acronym"); //récupération de l'acronyme pour le titre
 
+	var sum=summary.value.split("-");
+
+	semcourse=course_data[sum[0]].semester;
 
 	//création de l'ID
 	//extraction de l'année (M1 ou M2) via le semestre
@@ -332,11 +322,8 @@ function createCalendarCourse(){
 	var creadate = cyear+cmonth+cday+"T"+chour+cmin+csec;
 	//extraction de la somme des valeurs des parcours ayant ce cours
 
-	var summary=document.getElementById("uesemester");
-	newCourse.comment=summary.options[summary.selectedIndex].getAttribute("data-acronym"); //récupération de l'acronyme pour le titre
 
-	var sum=summary.value;
-	var stu=sum.split(0).students; //sauvegarde de l'ID puis recherche des étudiants pour cette UE
+	var stu=course_data[sum[0]].students; //sauvegarde de l'ID puis recherche des étudiants pour cette UE
 
 	var stusplit = stu.split(","); //séparation des différents groupes
 
@@ -355,7 +342,7 @@ function createCalendarCourse(){
 	// }
 		//ajout dans l'objet de l'ID et du summary
 		newCourse.id = "C"+year+sumsum+creadate+"@"+author;
-		newCourse.summary=summary;
+		newCourse.summary=document.getElementById("uesemester").value;
 
 	//extraction de la date de début et de la date de fin du cours
 	var yearstart=document.getElementById("startYear").value;
@@ -402,7 +389,6 @@ function createCalendarCourse(){
 	newCourse.description=document.getElementById("content").value;
 
 	console.log(newCourse);
-
 	//passage de l'objet js en JSON
 
 	var xhr = new XMLHttpRequest();
@@ -412,6 +398,7 @@ function createCalendarCourse(){
  	 // send the collected data as JSON
   	xhr.send(JSON.stringify(newCourse));
   	xhr.onreadystatechange = function () {
+  		console.log("End");
 	}
 };
 
@@ -421,7 +408,7 @@ function createCalendarEvent(){
 
 	//création de l'ID
 		//extraction de l'auteur de l'event (à remplacer par l'utilisateur GitHub)
-		var author=document.getElementById("authorevent").value;
+		var author=document.getElementById("authorgitevent").value;
 		//extraction de la date de création
 		var datecrea = new Date();
 		var cday = ("0" + (datecrea.getDate())).slice(-2);
@@ -488,7 +475,6 @@ function createCalendarEvent(){
 	}
 	else{
 		var room=document.getElementById("roomevent").value;
-		console.log(room);
 		newEvent.location="room"+room+"@"+bat;
 	}
 
@@ -520,6 +506,8 @@ function createCalendarEvent(){
    		newEvent.comment=document.getElementById("summaryevent").value;
    	}
 
+   	console.log(newEvent);
+
    	var xhr = new XMLHttpRequest();
   	xhr.open("POST", "/createevent", true);
   	xhr.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
@@ -527,7 +515,6 @@ function createCalendarEvent(){
  	 // send the collected data as JSON
   	xhr.send(JSON.stringify(newEvent));
   	xhr.onreadystatechange = function () {
-  		console.log("End")
 	}
    }
 
@@ -535,7 +522,6 @@ function createCalendarEvent(){
 
 function deleteCalendar(){
    	var nbtitles = document.getElementsByClassName("titlecaldel");
-   	console.log(myCalendar);
    	for (var i = 0; i< nbtitles.length; i++)
    	{
    		if (nbtitles[i].checked)
@@ -544,6 +530,5 @@ function deleteCalendar(){
    			delete myCalendar[ID];
    		}
    	}
-   	console.log(myCalendar);
    	getCalendarJSON();
 }

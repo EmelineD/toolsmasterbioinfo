@@ -1,25 +1,24 @@
-var http = require('http'),
-    url = require('url'),
-    path = require('path'),
-    fs = require('fs'),
-    qs = require('qs'),
-    github = require('octonode'),
-    qs = require('querystring');
+var express = require('express');
+var app = express();
+var passport = require("passport")
+var GitHubStrategy = require('passport-github2').Strategy;
+var github = require('octonode');
+var ejs=require("ejs");
 
-var mimeTypes = {
-    "html": "text/html",
-    "jpeg": "image/jpeg",
-    "jpg": "image/jpeg",
-    "png": "image/png",
-    "js": "text/javascript",
-    "css": "text/css"};
+var server = app.listen(8080, function () {
+var host = server.address().address;
+var port = server.address().port;
 
-var client=null;
-var ghrepo =null;
-var state;
+app.use(passport.initialize());
+app.use(passport.session());
 
-var passport= require('passport')
-  , GitHubStrategy = require('passport-github2').Strategy;
+passport.serializeUser(function(user, done) {
+  done(null, user);
+});
+
+passport.deserializeUser(function(obj, done) {
+  done(null, obj);
+});
 
 var GITHUB_CLIENT_ID = '2254bfe8fe6989830488';
 var GITHUB_CLIENT_SECRET = '36d6eb32c47ba1dc9e0331397d7a165769730f2c';
@@ -43,114 +42,41 @@ var GITHUB_CLIENT_SECRET = '36d6eb32c47ba1dc9e0331397d7a165769730f2c';
 ));
 
 
-http.createServer(function(req, res) {
-    var uri = url.parse(req.url).pathname;
-    var sha;
-    if (uri=='/login') {
-        var body = '';
-        req.on('data', function (data) {
-            body += data;
-        });
-        req.on('end', function () {
-        parsedBody = qs.parse(body);
 
-        passport.authenticate('github',
-        function(req, res) {
-        // If this function gets called, authentication was successful.
-        // `req.user` contains the authenticated user.
-        res.redirect('/users/' + req.user.username);
-        }
-    });
-    }
+  app.get('/', function(req, res) {
+    res.render('CalendarMgr.ejs', { user: req.user });
+  });
 
-    else if(uri=='/auth/github'){
-        passport.authenticate('github');    
-        function(req, res){
+  app.get('/login', function(req, res){
+  res.render('login.ejs', { user: req.user });
+});
+
+app.post('/login',
+  passport.authenticate('github'),
+  function(req, res) {
+    // If this function gets called, authentication was successful.
+    // `req.user` contains the authenticated user.
+    res.redirect('/users/' + req.user.username);
+  });
+
+app.get('/auth/github',
+  passport.authenticate('github'),
+  function(req, res){
     // The request will be redirected to GitHub for authentication, so this
     // function will not be called.
-  });   
-    }
+  });
 
-    // Callback url from github login
-    else if (uri=='/auth/github/callback') {
+app.get('/auth/github/callback', 
+  passport.authenticate('github', { failureRedirect: '/login' }),
+  function(req, res) {
+    var client=github.client(req.user);
 
-          passport.authenticate('github', { failureRedirect: '/login' }),
-        function(req, res) {
-            var client=github.client(req.user);
-
-    client.get('/user', {}, function (err, status, body, headers) {
-     console.log(body); //json object
-     });
+  client.get('/user', {}, function (err, status, body, headers) {
+   console.log(body); //json object
+   });
     res.redirect('/');
   });
 
-        // passport.authenticate('github', { failureRedirect: '/login' }),
-        // function(req, res) {
-        // // Successful authentication, redirect home.
-        //     res.redirect('/');
-        // }
-        // github.auth.login(qs.parse(uri.query).code,function(err,token){
-        //     res.writeHead(200, {'Content-Type': 'text/plain'});
-        //     console.log(token);
-        //     res.end(token);
-        // });
-        // var values = qs.parse(uri.query);
-        // // Check against CSRF attacks
-        // if (!state || state[1] != values.state) {
 
-        //   res.writeHead(301, {Location: '/CalendarMgr.html?status=1', 'Access-Control-Allow-Credentials': true });
-        //   res.end('');
-        // } 
-        // else {
-        //   github.auth.login(values.code, function (err, token) {
-        //     res.writeHead(200, {'Content-Type': 'text/plain'});
-        //     res.end(token);
-        //   });
-        // }
-    }
-
-    else if(uri=='/createcourse'){
-        if (req.method === 'POST') {
-
-        var body='';
-        var post='';
-
-        req.on('data', function(data){
-            body+=data
-        });
-
-        console.log(body);
-
-        req.on('end', function(){
-            req.post=qs.parse(body);
-            
-        });
-
-        }
-        else{
-            console.log("Rien");
-        }
-    }
-    
-    else{
-        var filename = path.join(process.cwd(), uri);
-        path.exists(filename, function(exists) {
-        if(!exists) {
-            console.log("not exists: " + filename);
-            res.writeHead(200, {'Content-Type': 'text/plain'});
-            res.write('404 Not Found\n');
-            res.end();
-            return;
-        }
-        var mimeType = mimeTypes[path.extname(filename).split(".")[1]];
-        res.writeHead(200, {'Content-Type':mimeType});
-
-        var fileStream = fs.createReadStream(filename);
-        fileStream.pipe(res);
-        }) //end path.exists
-    }
-
-    function setSHA(a_sha) {
-        sha = a_sha;
-    }
-}).listen(8080);
+  console.log('Example app listening at http://%s:%s', host, port);
+});
