@@ -18,8 +18,30 @@ var client=null;
 var ghrepo =null;
 var state;
 
-var everyauth = require('everyauth')
-  , connect = require('connect');
+var passport= require('passport')
+  , GitHubStrategy = require('passport-github2').Strategy;
+
+var GITHUB_CLIENT_ID = '2254bfe8fe6989830488';
+var GITHUB_CLIENT_SECRET = '36d6eb32c47ba1dc9e0331397d7a165769730f2c';
+
+ passport.use(new GitHubStrategy({
+    clientID: GITHUB_CLIENT_ID,
+    clientSecret: GITHUB_CLIENT_SECRET,
+    callbackURL: "http://127.0.0.1:8080/auth/github/callback",
+    scope:["user","repo"]
+  },
+  function(accessToken, refreshToken, profile, done) {
+    // asynchronous verification, for effect...
+    process.nextTick(function () {
+      // To keep the example simple, the user's GitHub profile is returned to
+      // represent the logged-in user.  In a typical application, you would want
+      // to associate the GitHub account with a user record in your database,
+      // and return that user instead.
+      return done(null,accessToken);
+    });
+  }
+));
+
 
 http.createServer(function(req, res) {
     var uri = url.parse(req.url).pathname;
@@ -32,50 +54,59 @@ http.createServer(function(req, res) {
         req.on('end', function () {
         parsedBody = qs.parse(body);
 
-
-    //     var auth_url = github.auth.config({
-    //         id: '2254bfe8fe6989830488',
-    //         secret: '36d6eb32c47ba1dc9e0331397d7a165769730f2c'
-    //         }).login(['repo']);
-    // //    console.log(auth_url);
-    //     state = auth_url.match(/&state=([0-9a-z]{32})/i);
-
-    //     client = github.client();
-    //     // console.log(client);
-
-
-        everyauth.github
-          .appId('YOUR CLIENT ID HERE')
-          .appSecret('YOUR CLIENT SECRET HERE')
-          .findOrCreateUser( function (session, accessToken, accessTokenExtra, githubUserMetadata) {
-            // find or create user logic goes here
-          })
-          .redirectPath('/');
-
-            res.writeHead(302, {'Content-Type': 'text/plain', 'Location': auth_url, 'Access-Control-Allow-Credentials': true  })
-            res.end('Redirecting to ' + auth_url);
-        });
-    }
-    // Callback url from github login
-    else if (uri=='/auth/callback') {
-        github.auth.login(qs.parse(uri.query).code,function(err,token){
-            res.writeHead(200, {'Content-Type': 'text/plain'});
-            console.log(token);
-            res.end(token);
-        });
-        var values = qs.parse(uri.query);
-        // Check against CSRF attacks
-        if (!state || state[1] != values.state) {
-
-          res.writeHead(301, {Location: '/CalendarMgr.html?status=1', 'Access-Control-Allow-Credentials': true });
-          res.end('');
-        } 
-        else {
-          github.auth.login(values.code, function (err, token) {
-            res.writeHead(200, {'Content-Type': 'text/plain'});
-            res.end(token);
-          });
+        passport.authenticate('github',
+        function(req, res) {
+        // If this function gets called, authentication was successful.
+        // `req.user` contains the authenticated user.
+        res.redirect('/users/' + req.user.username);
         }
+    });
+    }
+
+    else if(uri=='/auth/github'){
+        passport.authenticate('github');    
+        function(req, res){
+    // The request will be redirected to GitHub for authentication, so this
+    // function will not be called.
+  });   
+    }
+
+    // Callback url from github login
+    else if (uri=='/auth/github/callback') {
+
+          passport.authenticate('github', { failureRedirect: '/login' }),
+        function(req, res) {
+            var client=github.client(req.user);
+
+    client.get('/user', {}, function (err, status, body, headers) {
+     console.log(body); //json object
+     });
+    res.redirect('/');
+  });
+
+        // passport.authenticate('github', { failureRedirect: '/login' }),
+        // function(req, res) {
+        // // Successful authentication, redirect home.
+        //     res.redirect('/');
+        // }
+        // github.auth.login(qs.parse(uri.query).code,function(err,token){
+        //     res.writeHead(200, {'Content-Type': 'text/plain'});
+        //     console.log(token);
+        //     res.end(token);
+        // });
+        // var values = qs.parse(uri.query);
+        // // Check against CSRF attacks
+        // if (!state || state[1] != values.state) {
+
+        //   res.writeHead(301, {Location: '/CalendarMgr.html?status=1', 'Access-Control-Allow-Credentials': true });
+        //   res.end('');
+        // } 
+        // else {
+        //   github.auth.login(values.code, function (err, token) {
+        //     res.writeHead(200, {'Content-Type': 'text/plain'});
+        //     res.end(token);
+        //   });
+        // }
     }
 
     else if(uri=='/createcourse'){

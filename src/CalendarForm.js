@@ -1,11 +1,18 @@
-var listUE7 = [];
-var listidUE7= [];
-var listUE8 = [];
-var listidUE8= [];
-var listUE9 = [];
-var listidUE9= [];
-var listUE10 = [];
-var listidUE10= [];
+var listUE=[];
+var listUE7 = [],
+	listUE8 = [],
+	listUE9 = [],
+	listUE10 = [];
+listUE.push(listUE7,listUE8,listUE9,listUE10);
+var listidUE=[];
+var listidUE7 = [],
+	listidUE8 = [],
+	listidUE9 = [],
+	listidUE10 = [];
+listidUE.push(listidUE7,listidUE8,listidUE9,listidUE10);
+
+var sem=[7,8,9,10];
+
 var locTalence = [];
 var locCarreire = [];
 var listlect = [];
@@ -17,44 +24,32 @@ function initCalendar() {
 
 	initStatus();
 	//création des listes de cours
-	var sem;
+
+	
+	var semcourse;
 	var acro;
 	var idue;
 	for (var c in course_data){
 		if (course_data[c].visibility==="visible"){
-			acro=course_data[c].acronym;
-			idue=course_data[c].id;
-			ue=idue+"-"+acro;
+			ue=course_data[c].id+"-"+course_data[c].acronym;
 			if (course_data[c].link){
-				var link=course_data[c].link;
-				sem=course_data[link].semester;
-				ue=idue;
+				semcourse=course_data[course_data[c].link].semester;
+				ue=course_data[c].id;
 			}
 			else{
-				sem=course_data[c].semester;
+				semcourse=course_data[c].semester;
 			}
-			if (sem == 7){
-				listUE7.push(ue);
-				listidUE7.push(idue);
-				listUE7.sort();
-			}
-			else if(sem == 8){
-				listUE8.push(ue);
-				listidUE8.push(idue);
-				listUE8.sort();
-			}
-			else if(sem == 9){
-				listUE9.push(ue);
-				listidUE9.push(idue);
-				listUE9.sort();
-			}
-			else if(sem == 10){
-				listUE10.push(ue);
-				listidUE10.push(idue);
-				listUE10.sort();
-			}	
+			sem.forEach(function putCourseinSem(el,i,sem){
+				if (sem[i]==semcourse){
+					listUE[i].push(ue);
+					listidUE[i].push(course_data[c].acronym);
+					listUE[i].sort();
+					listidUE[i].sort();
+				}
+			})
 		}		
-	}
+	}	
+	console.log(listidUE);
 	//création de la liste des professeurs
 	var lectselect='';
 	for (var lec in lecturers){
@@ -246,6 +241,7 @@ function selectUE(){
 	sem=parseInt(sem);
 	var listUE;
 	var listidUE;
+
 	if (sem == 7){
 		listUE=listUE7;
 		listidUE=listidUE7;
@@ -264,8 +260,8 @@ function selectUE(){
 	}
 	var html ='<h3>UE</h3>     <select name="uesemester" id="uesemester"">';
 	for (var m=0;m<listUE.length;m++){
-		var ue = listidUE[m];
-		html += '<option value="'+listUE[m]+'"data-acronym="'+course_data[ue]["acronym"]+'" >'+listUE[m]+'</option>';
+		console.log(listUE[m])
+		html += '<option value="'+listUE[m]+'" data-acronym="'+listidUE[m]+'" >'+listUE[m]+'</option>';
 		
 	}
 	html += '</select>';
@@ -315,6 +311,7 @@ function createCalendarCourse(){
 	//création de l'ID
 	//extraction de l'année (M1 ou M2) via le semestre
 	var sem=document.getElementById("semester").value;
+
 	if (sem===7 || sem===8){
 		var year=1;
 	}
@@ -334,12 +331,15 @@ function createCalendarCourse(){
 	var csec = ("0" + (datecrea.getSeconds())).slice(-2);
 	var creadate = cyear+cmonth+cday+"T"+chour+cmin+csec;
 	//extraction de la somme des valeurs des parcours ayant ce cours
-	var summary=document.getElementById("uesemester").value; //extraction de l'UE entière
-	var ue= summary.split("-"); //séparation pour obtenir l'ID et l'acronyme de l'UE 
-	var acronym=course_data[ue[0]].acronym; //récupération de l'acronyme pour le titre
-	newCourse.comment=acronym;
-	var stu= course_data[ue[0]].students; //sauvegarde de l'ID puis recherche des étudiants pour cette UE
+
+	var summary=document.getElementById("uesemester");
+	newCourse.comment=summary.options[summary.selectedIndex].getAttribute("data-acronym"); //récupération de l'acronyme pour le titre
+
+	var sum=summary.value;
+	var stu=sum.split(0).students; //sauvegarde de l'ID puis recherche des étudiants pour cette UE
+
 	var stusplit = stu.split(","); //séparation des différents groupes
+
 	var parc=[];
 	for (var i in stusplit){
 		var parca = stusplit[i].split("[");	
